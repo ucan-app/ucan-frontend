@@ -1,1 +1,5 @@
-import React from 'react';
+import React from "react";
+
+type AuthenticationProps = {};
+
+type AuthenticaionState = {};

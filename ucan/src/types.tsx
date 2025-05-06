@@ -1,5 +1,5 @@
-type Page =
-  | "Forum"
+export type Page =
+  | "Home"
   | "ViewProf"
   | "EditProf"
   | "ViewPost"
@@ -9,7 +9,7 @@ type Page =
   | "AddBadge"
   | "Verify";
 
-type User = {
+export type User = {
   uid: number;
   firstName: string;
   lastName: string;
@@ -21,7 +21,7 @@ type User = {
   // Email and password will not be stored in browser
 };
 
-type Post = {
+export type Post = {
   uid: number;
   pid: number;
   title: string;
@@ -32,7 +32,7 @@ type Post = {
   // All other votes will not be stored in browser
 };
 
-type PostComment = {
+export type PostComment = {
   uid: number;
   pid: number;
   cid: number;
@@ -41,11 +41,11 @@ type PostComment = {
   isVotedByUser: Vote | null;
 };
 
-type Vote = {
+export type Vote = {
   voteType: "UP" | "DOWN";
 };
 
-type Badge = {
+export type Badge = {
   bid: string;
   type: "UW" | "COMPANY";
   companyName?: string;

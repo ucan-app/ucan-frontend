@@ -1,42 +1,78 @@
-import React, { useState, useEffect } from 'react';
+/*import React, { useState, useEffect, JSX, Component } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 // Import components
-import HomePage from './components/FrontPage';
+import HomePage from './components/HomePage';
 import ViewProfile from './components/ViewProfile';
 import Login from './components/Login';
-import EditProfile from './components/EditProfile';
-import CreateProfile from './components/CreateProfile';
-import AddBadge from './components/AddBadge';
-import Authentication from './components/Authentication';
+import Signup from './components/Signup';
 import ViewPost from './components/ViewPost';
 import CreatePost from './components/CreatePost';
-import SearchResult from './components/SearchResult';
 
+import {User} from './types';
 
-// Define User interface
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  badges: Badge[];
-  // Add other user properties as needed
+type Page =
+  | "Home"
+  | "ViewProf"
+  | "ViewPost"
+  | "CreatePost"
+  | "Login"
+  | "SignUp"
+
+type AppState = {
+  page: Page;
+  user: User | null;
 }
 
-// Define Badge interface
-interface Badge {
-  id: string;
-  type: 'UW' | 'COMPANY';
-  label: string;
-  verifiedDomain: string;
+export class App extends Component<{}, AppState> {
+  constructor(props: {}) {
+    super(props);
+    this.state = {page: "Home", user: null}
+  }
+
+  render = (): JSX.Element => {
+    if( this.state.page === "Home") {
+      return <HomePage />;
+    }
+    else if( this.state.page === "ViewProf") {
+      return <ViewProfile />;
+    }
+    else if( this.state.page === "ViewPost") {
+      return <ViewPost />;
+    }
+    else if( this.state.page === "CreatePost") {
+      return <CreatePost />;
+    }
+    else if( this.state.page === "Login") {
+      return <Login />;
+    }
+    else { // signup
+      return <Signup />;
+    }
+  };
+
 }
+
+*/
+
+import React, { JSX, useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+
+// Import components
+import HomePage from './components/HomePage';
+import ViewProfile from './components/ViewProfile';
+import Login from './components/Login';
+import Signup from './components/Signup';
+import ViewPost from './components/ViewPost';
+import CreatePost from './components/CreatePost';
+import { User } from './types';
 
 function App(): JSX.Element {
-  // Basic user state that you can expand later
+  // User state management
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
-  // Simple login/logout functions without token handling
+  // Authentication handlers
   const handleLogin = (user: User) => {
     setCurrentUser(user);
     setIsLoggedIn(true);
@@ -50,23 +86,43 @@ function App(): JSX.Element {
   return (
     <Router>
       <div className="app-container">
-        <NavigationBar 
-          isLoggedIn={isLoggedIn} 
-          onLogout={handleLogout}
-        />
+        <header>
+          {/* You can add a navigation component here later */}
+          <nav className="main-nav">
+            <ul>
+              <li><a href="/">Home</a></li>
+              {isLoggedIn ? (
+                <>
+                  <li><a href="/profile">Profile</a></li>
+                  <li><a href="/create">Create Post</a></li>
+                  <li><button onClick={handleLogout}>Logout</button></li>
+                </>
+              ) : (
+                <>
+                  <li><a href="/signup">Sign Up</a></li>
+                </>
+              )}
+            </ul>
+          </nav>
+        </header>
+        
         <main className="main-content">
           <Routes>
-            {/* All routes accessible whether logged in or not */}
+            {/* Public routes */}
             <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<Login onLogin={handleLogin} />} />
-            <Route path="/register" element={<CreateProfile />} />
-            <Route path="/profile/:id" element={<ViewProfile />} />
-            <Route path="/profile/edit" element={<EditProfile />} />
-            <Route path="/profile/badge" element={<AddBadge />} />
+            
+            <Route path="/signup" element={<Signup />} />
             <Route path="/posts/:id" element={<ViewPost />} />
-            <Route path="/posts/create" element={<CreatePost />} />
-            <Route path="/search" element={<SearchResult />} />
-            <Route path="/auth/verify" element={<Authentication />} />
+            <Route path="/profile/:id" element={<ViewProfile />} />
+            
+            {/* Protected routes */}
+            <Route 
+              path="/create" 
+              element={isLoggedIn ? <CreatePost user={currentUser} /> : <Navigate to="/login" />} 
+            />
+            
+            {/* Default route - redirect to home */}
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
       </div>

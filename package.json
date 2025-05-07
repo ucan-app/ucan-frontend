@@ -18,10 +18,25 @@
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
+  "devDependencies": {
+    "@types/chai": "^4.3.11",
+    "@types/jsdom": "^21.1.7",
+    "@types/mocha": "^10.0.6",
+    "chai": "^4.3.10",
+    "chai-dom": "^1.12.0",
+    "ignore-styles": "^5.0.1",
+    "jsdom": "^23.0.1",
+    "jsdom-global": "^3.0.2",
+    "mocha": "^10.2.0",
+    "sinon": "^17.0.1",
+    "sinon-chai": "^3.7.0",
+    "ts-mocha": "^11.1.0",
+    "ts-node": "^10.9.2"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "ts-mocha -p tsconfig.json --require ignore-styles src/**/*_test.{ts,tsx}",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

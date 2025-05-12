@@ -4,12 +4,7 @@ import { User } from "../types";
 const API_BASE_URL = "http://localhost:8080/api/auth"; // Update with your backend URL
 
 export const login = async (username: string, password: string): Promise<User> => {
-  const response = await axios.post(`${API_BASE_URL}/login`, { username, password });
-  return response.data;
-};
-
-export const getCurrentUser = async (): Promise<User | null> => {
-  const response = await axios.get(`${API_BASE_URL}/current-user`, { withCredentials: true });
+  const response = await axios.post("http://localhost:8080/login", new URLSearchParams({ username, password }), { withCredentials: true });
   return response.data;
 };
 
@@ -18,5 +13,5 @@ export const logout = async (): Promise<void> => {
 };
 
 export const register = async (username: string, email: string, password: string): Promise<void> => {
-  await axios.post(`${API_BASE_URL}/register`, { username, email, password });
+  await axios.post(`${API_BASE_URL}/register`, { username, email, password }, { withCredentials: true });
 };

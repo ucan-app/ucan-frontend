@@ -7,14 +7,17 @@ import {
 } from "react-router-dom";
 import { login, getCurrentUser, logout } from "./api/auth"; // Import API functions
 
-// Import components
-import HomePage from "./components/HomePage";
-import ViewProfile from "./components/ViewProfile";
-import Login from "./components/Login";
-import Signup from "./components/Signup";
-import ViewPost from "./components/ViewPost";
-import CreatePost from "./components/CreatePost";
+// Import pages
+import HomePage from "./pages/HomePage";
+import ViewProfile from "./pages/ViewProfile";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import ViewPost from "./pages/ViewPost";
+import CreatePost from "./pages/CreatePost";
 import { User } from "./types";
+
+// Import components
+import Layout from "./components/Layout";
 
 function App(): JSX.Element {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -60,60 +63,26 @@ function App(): JSX.Element {
 
   return (
     <Router>
-      <div className="app-container">
-        <header>
-          <nav className="main-nav">
-            <ul>
-              <li>
-                <a href="/">Home</a>
-              </li>
-              {isLoggedIn ? (
-                <>
-                  <li>
-                    <a href="/profile">Profile</a>
-                  </li>
-                  <li>
-                    <a href="/create">Create Post</a>
-                  </li>
-                  <li>
-                    <button onClick={handleLogout}>Logout</button>
-                  </li>
-                </>
+      <Layout isLoggedIn={isLoggedIn} handleLogout={handleLogout}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/posts/:id" element={<ViewPost />} />
+          <Route path="/profile/:id" element={<ViewProfile />} />
+          <Route
+            path="/create"
+            element={
+              isLoggedIn ? (
+                <CreatePost user={currentUser} />
               ) : (
-                <>
-                  <li>
-                    <a href="/login">Login</a> {/* Add Login link */}
-                  </li>
-                  <li>
-                    <a href="/signup">Sign Up</a>
-                  </li>
-                </>
-              )}
-            </ul>
-          </nav>
-        </header>
-  
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<Login onLogin={handleLogin} />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/posts/:id" element={<ViewPost />} />
-            <Route path="/profile/:id" element={<ViewProfile />} />
-            <Route
-              path="/create"
-              element={
-                isLoggedIn ? (
-                  <CreatePost user={currentUser} />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-        </main>
-      </div>
+                <Navigate to="/login" />
+              )
+            }
+          />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Layout>
     </Router>
   );
 }

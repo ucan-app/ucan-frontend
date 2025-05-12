@@ -13,47 +13,43 @@ const api = axios.create({
   }*/
 });
 
-export const login = async (username: string, password: string): Promise<User> => {
+export const login = async (username: string, password: string): Promise<User | undefined> => {
   try {
     // Using application/x-www-form-urlencoded format as expected by Spring Security
     const response = await axios.post(
-      "http://127.0.0.1:8080/login", 
-      new URLSearchParams({ username, password }), 
-      { 
-        withCredentials: true,
-      }
+      "http://127.0.0.1:8080/login",
+      new URLSearchParams({ username, password }),
+      { withCredentials: true }
     );
-    
-    // Check if the response contains user data
-    if (response.data && response.status === 200) {
-      return response.data;
-    } else {
-      throw new Error("Login failed. Please check your credentials.");
-    }
+
+    // Return user data if the response is successful
+    return response.data;
   } catch (error: any) {
-     if (error.response?.status === 401) {
-      throw new Error("Invalid username or password");
-    } else if (error.response) {
-      throw new Error(error.response.data?.error || "Login failed");
-    } else if (error.request) {
-      throw new Error("Server not responding. Please try again later");
-    } else {
-      throw new Error("Login failed. Please try again");
-    }
+    handleApiError(error, "Login failed. Please check your credentials.");
+    return undefined; // Explicitly return undefined in case of an error
   }
 };
 
 export const logout = async (): Promise<void> => {
-  await axios.post("http://127.0.0.1:8080/logout", {}, { withCredentials: true });
+  try {
+    await axios.post("http://127.0.0.1:8080/logout", {}, { withCredentials: true });
+  } catch (error: any) {
+    handleApiError(error, "Logout failed. Please try again.");
+  }
 };
 
 export const register = async (username: string, email: string, password: string): Promise<void> => {
-  try{
-    await axios.post("http://127.0.0.1:8080/api/auth/register", { username, email, password }, { withCredentials: true });
+  try {
+    await axios.post(
+      "http://127.0.0.1:8080/api/auth/register",
+      { username, email, password },
+      { withCredentials: true }
+    );
   } catch (error: any) {
-        handleApiError(error, "Registration failed");
+    handleApiError(error, "Registration failed. Please check your input.");
   }
 };
+
 
 export const requestBadgeVerification = async (badgeId: string): Promise<void> => {
   try {
@@ -146,28 +142,25 @@ export const updateProfile = async (profileData: Partial<User>): Promise<User> =
 // Helper function to handle API errors consistently
 const handleApiError = (error: any, defaultMessage: string): never => {
   if (error.response) {
-    // The request was made and the server responded with a status code
-    // that falls out of the range of 2xx
+    // Extract error message from the backend response
     const errorMessage = error.response.data?.error || error.response.data?.message || defaultMessage;
-    
-    // Handle different status codes
+
+    // Handle specific HTTP status codes
     switch (error.response.status) {
       case 401:
-        throw new Error("You must be logged in to perform this action.");
+        throw new Error("Invalid credentials. Please try again.");
       case 403:
-        throw new Error("You don't have permission to perform this action.");
-      case 404:
-        throw new Error("The requested resource was not found.");
+        throw new Error("Access denied. You do not have permission to perform this action.");
       case 422:
         throw new Error(errorMessage || "Validation error. Please check your input.");
       default:
-        throw new Error(errorMessage);
+        throw new Error(errorMessage || "An unexpected error occurred.");
     }
   } else if (error.request) {
-    // The request was made but no response was received
+    // No response received from the server
     throw new Error("No response from server. Please check your connection and try again.");
   } else {
-    // Something happened in setting up the request that triggered an Error
+    // Other errors (e.g., network issues)
     throw new Error(error.message || defaultMessage);
   }
 };

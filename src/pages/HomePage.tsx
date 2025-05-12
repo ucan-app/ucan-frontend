@@ -8,7 +8,7 @@ type HomePageProps = {
 
 type HomePageState = {};*/
 
-import React from 'react';
+import React from "react";
 
 // Define the component with explicit return type
 const HomePage: React.FC<{}> = () => {

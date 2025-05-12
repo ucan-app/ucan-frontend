@@ -1,4 +1,4 @@
-import React, { JSX, useState, useEffect } from "react";
+import React, { JSX, useState } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -19,9 +19,11 @@ function App(): JSX.Element {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
-
   // Authentication handlers
-  const handleLogin = async (username: string, password: string): Promise<any> => {
+  const handleLogin = async (
+    username: string,
+    password: string
+  ): Promise<any> => {
     try {
       const user = await login(username, password);
       setCurrentUser(user);
@@ -51,8 +53,8 @@ function App(): JSX.Element {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/posts/:id" element={<ViewPost />} />
-          <Route path="/profile/:id" element={<ViewProfile />} />
+          <Route path="/post/:pid" element={<ViewPost />} />
+          <Route path="/profile/:uid" element={<ViewProfile />} />
           <Route
             path="/create"
             element={

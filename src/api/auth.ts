@@ -16,3 +16,7 @@ export const getCurrentUser = async (): Promise<User | null> => {
 export const logout = async (): Promise<void> => {
   await axios.post(`${API_BASE_URL}/logout`, {}, { withCredentials: true });
 };
+
+export const register = async (username: string, email: string, password: string): Promise<void> => {
+  await axios.post(`${API_BASE_URL}/register`, { username, email, password });
+};

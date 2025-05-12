@@ -1,10 +1,11 @@
-import React, { JSX, useState } from "react";
+import React, { JSX, useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Route,
   Routes,
   Navigate,
 } from "react-router-dom";
+import { login, getCurrentUser, logout } from "./api/auth"; // Import API functions
 
 // Import components
 import HomePage from "./components/HomePage";
@@ -16,26 +17,51 @@ import CreatePost from "./components/CreatePost";
 import { User } from "./types";
 
 function App(): JSX.Element {
-  // User state management
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
+  // Fetch the current user on app load
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const user = await getCurrentUser();
+        if (user) {
+          setCurrentUser(user);
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        console.error("Failed to fetch current user:", error);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
+
   // Authentication handlers
-  const handleLogin = (user: User) => {
-    setCurrentUser(user);
-    setIsLoggedIn(true);
+  const handleLogin = async (username: string, password: string) => {
+    try {
+      const user = await login(username, password);
+      setCurrentUser(user);
+      setIsLoggedIn(true);
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
 
-  const handleLogout = () => {
-    setCurrentUser(null);
-    setIsLoggedIn(false);
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setCurrentUser(null);
+      setIsLoggedIn(false);
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   return (
     <Router>
       <div className="app-container">
         <header>
-          {/* You can add a navigation component here later */}
           <nav className="main-nav">
             <ul>
               <li>
@@ -56,6 +82,9 @@ function App(): JSX.Element {
               ) : (
                 <>
                   <li>
+                    <a href="/login">Login</a> {/* Add Login link */}
+                  </li>
+                  <li>
                     <a href="/signup">Sign Up</a>
                   </li>
                 </>
@@ -63,17 +92,14 @@ function App(): JSX.Element {
             </ul>
           </nav>
         </header>
-
+  
         <main className="main-content">
           <Routes>
-            {/* Public routes */}
             <Route path="/" element={<HomePage />} />
-
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/posts/:id" element={<ViewPost />} />
             <Route path="/profile/:id" element={<ViewProfile />} />
-
-            {/* Protected routes */}
             <Route
               path="/create"
               element={
@@ -84,8 +110,6 @@ function App(): JSX.Element {
                 )
               }
             />
-
-            {/* Default route - redirect to home */}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>

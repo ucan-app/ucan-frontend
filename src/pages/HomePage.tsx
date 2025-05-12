@@ -25,9 +25,9 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const load = async () => {
       setLoading(true);
-      const { posts } = await fetchPosts(query);
+      const { posts: postList } = await fetchPosts(query);
 
-      setPostList(dummyPosts);
+      setPostList(postList);
       setLoading(false);
     };
     load();

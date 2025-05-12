@@ -1,22 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Post } from "../types";
 import PostPreview from "../components/PostPreview";
 import { dummyPosts } from "../dummyData";
 
-interface HomePageProps {
-  posts?: Post[];
+async function fetchPosts(): Promise<{ posts: Post[] }> {
+  // Not implemented yet
+  return { posts: [] };
 }
 
-// Define the component with explicit return type
-const HomePage: React.FC<HomePageProps> = ({ posts }) => {
-  // Implement logic to call default posts or given posts here
-  const postsToRender = posts && posts.length > 0 ? posts : dummyPosts;
+const HomePage: React.FC = () => {
+  const [postList, setPostList] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      const { posts } = await fetchPosts();
+
+      if (posts.length > 0) {
+        setPostList(posts);
+      } else {
+        // Fallback to dummy data
+        setPostList(dummyPosts);
+      }
+      setLoading(false);
+    };
+    load();
+  });
+
+  if (loading) return <div>Loading...</div>;
+  if (postList.length === 0) return <div>No posts available.</div>;
 
   return (
     <div>
       <h1>Home Page</h1>
       <p>Welcome to the home page!</p>
-      {postsToRender.map((post) => (
+      {postList.map((post) => (
         <PostPreview key={post.pid} post={post} />
       ))}
     </div>

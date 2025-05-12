@@ -17,7 +17,7 @@ export const login = async (username: string, password: string): Promise<User | 
   try {
     // Using application/x-www-form-urlencoded format as expected by Spring Security
     const response = await axios.post(
-      "http://127.0.0.1:8080/login",
+      "http://127.0.0.1:8080/api/auth/login",
       new URLSearchParams({ username, password }),
       { withCredentials: true }
     );

@@ -21,13 +21,16 @@ function App(): JSX.Element {
 
 
   // Authentication handlers
-  const handleLogin = async (username: string, password: string) => {
+  const handleLogin = async (username: string, password: string): Promise<any> => {
     try {
       const user = await login(username, password);
       setCurrentUser(user);
       setIsLoggedIn(true);
+      return user; // Return the user on successful login
     } catch (error) {
       console.error("Login failed:", error);
+      // Important: Re-throw the error so it can be caught by the Login component
+      throw error;
     }
   };
 

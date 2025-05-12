@@ -6,8 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { login, getCurrentUser, logout } from "./api/auth"; // Import API functions
-
-// Import pages
+import Layout from "./components/Layout";
 import HomePage from "./pages/HomePage";
 import ViewProfile from "./pages/ViewProfile";
 import Login from "./pages/Login";
@@ -15,9 +14,6 @@ import Signup from "./pages/Signup";
 import ViewPost from "./pages/ViewPost";
 import CreatePost from "./pages/CreatePost";
 import { User } from "./types";
-
-// Import components
-import Layout from "./components/Layout";
 
 function App(): JSX.Element {
   const [currentUser, setCurrentUser] = useState<User | null>(null);

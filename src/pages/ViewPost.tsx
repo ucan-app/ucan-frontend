@@ -1,16 +1,45 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Post, PostComment } from "../types";
 import PostFull from "../components/PostFull";
+import { Post, PostComment } from "../types";
+import { dummyPosts, dummyComments } from "../dummyData";
+
+async function fetchPostAndComments(
+  pid: number
+): Promise<{ post: Post | null; comments: PostComment[] }> {
+  // Not implemented yet
+  return { post: null, comments: [] };
+}
 
 const ViewPost: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const post = dummyPosts.find((p) => p.pid === Number(id));
-  const comments = dummyComments.filter((c) => c.pid === Number(id));
+  const { pid } = useParams<{ pid: string }>();
+  const [post, setPost] = useState<Post | null>(null);
+  const [comments, setComments] = useState<PostComment[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  if (!post) {
-    return <div>Post not found.</div>;
-  }
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      const id = Number(pid);
+      const { post, comments } = await fetchPostAndComments(id);
+
+      if (post) {
+        setPost(post);
+        setComments(comments);
+      } else {
+        // Fallback to dummy data
+        const dummyPost = dummyPosts.find((p) => p.pid === id) || dummyPosts[0];
+        const dummyComms = dummyComments.filter((c) => c.pid === dummyPost.pid);
+        setPost(dummyPost);
+        setComments(dummyComms);
+      }
+      setLoading(false);
+    };
+    load();
+  }, [pid]);
+
+  if (loading) return <div>Loading...</div>;
+  if (!post) return <div>Post not found.</div>;
 
   return (
     <div>
@@ -20,44 +49,3 @@ const ViewPost: React.FC = () => {
 };
 
 export default ViewPost;
-
-// Dummy data for demonstration
-const dummyPosts: Post[] = [
-  {
-    uid: 1,
-    pid: 1,
-    title: "First Post",
-    score: 10,
-    content: "This is the first dummy post.",
-    createdAt: new Date(),
-    isVotedByUser: null,
-  },
-  {
-    uid: 2,
-    pid: 2,
-    title: "Second Post",
-    score: 5,
-    content: "This is the second dummy post.",
-    createdAt: new Date(),
-    isVotedByUser: null,
-  },
-];
-
-const dummyComments: PostComment[] = [
-  {
-    uid: 1,
-    pid: 1,
-    cid: 1,
-    content: "This is a comment on the first post.",
-    createdAt: new Date(),
-    isVotedByUser: null,
-  },
-  {
-    uid: 2,
-    pid: 1,
-    cid: 2,
-    content: "Another comment on the first post.",
-    createdAt: new Date(),
-    isVotedByUser: null,
-  },
-];

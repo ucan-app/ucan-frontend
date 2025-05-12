@@ -53,8 +53,8 @@ function App(): JSX.Element {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/post/:id" element={<ViewPost />} />
-          <Route path="/profile/:id" element={<ViewProfile />} />
+          <Route path="/post/:pid" element={<ViewPost />} />
+          <Route path="/profile/:uid" element={<ViewProfile />} />
           <Route
             path="/create"
             element={

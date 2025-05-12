@@ -5,7 +5,7 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import { login, getCurrentUser, logout } from "./api/auth"; // Import API functions
+import { login, logout } from "./api/auth"; // Import API functions
 import Layout from "./components/Layout";
 import HomePage from "./pages/HomePage";
 import ViewProfile from "./pages/ViewProfile";
@@ -19,31 +19,18 @@ function App(): JSX.Element {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
-  // Fetch the current user on app load
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const user = await getCurrentUser();
-        if (user) {
-          setCurrentUser(user);
-          setIsLoggedIn(true);
-        }
-      } catch (error) {
-        console.error("Failed to fetch current user:", error);
-      }
-    };
-
-    fetchCurrentUser();
-  }, []);
 
   // Authentication handlers
-  const handleLogin = async (username: string, password: string) => {
+  const handleLogin = async (username: string, password: string): Promise<any> => {
     try {
       const user = await login(username, password);
       setCurrentUser(user);
       setIsLoggedIn(true);
+      return user; // Return the user on successful login
     } catch (error) {
       console.error("Login failed:", error);
+      // Important: Re-throw the error so it can be caught by the Login component
+      throw error;
     }
   };
 

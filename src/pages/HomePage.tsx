@@ -1,14 +1,22 @@
 import React from "react";
 import { Post } from "../types";
 import PostPreview from "../components/PostPreview";
+import { dummyPosts } from "../dummyData";
+
+interface HomePageProps {
+  posts?: Post[];
+}
 
 // Define the component with explicit return type
-const HomePage: React.FC<{}> = () => {
+const HomePage: React.FC<HomePageProps> = ({ posts }) => {
+  // Implement logic to call default posts or given posts here
+  const postsToRender = posts && posts.length > 0 ? posts : dummyPosts;
+
   return (
     <div>
       <h1>Home Page</h1>
       <p>Welcome to the home page!</p>
-      {dummyPosts.map((post) => (
+      {postsToRender.map((post) => (
         <PostPreview key={post.pid} post={post} />
       ))}
     </div>
@@ -16,33 +24,3 @@ const HomePage: React.FC<{}> = () => {
 };
 
 export default HomePage;
-
-const dummyPosts: Post[] = [
-  {
-    uid: 1,
-    pid: 1,
-    title: "First Post",
-    score: 10,
-    content: "This is the first dummy post.",
-    createdAt: new Date(),
-    isVotedByUser: null,
-  },
-  {
-    uid: 2,
-    pid: 2,
-    title: "Second Post",
-    score: 5,
-    content: "This is the second dummy post.",
-    createdAt: new Date(),
-    isVotedByUser: null,
-  },
-  {
-    uid: 3,
-    pid: 3,
-    title: "Third Post",
-    score: 8,
-    content: "This is the third dummy post.",
-    createdAt: new Date(),
-    isVotedByUser: null,
-  },
-];

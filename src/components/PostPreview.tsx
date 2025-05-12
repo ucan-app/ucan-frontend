@@ -1,14 +1,24 @@
 import React from "react";
 import { Post } from "../types";
+import { useNavigate } from "react-router-dom";
 
 interface PostPreviewProps {
   post: Post;
-  onClick?: () => void;
 }
 
-const PostPreview: React.FC<PostPreviewProps> = ({ post, onClick }) => {
+const PostPreview: React.FC<PostPreviewProps> = ({ post }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/post/${post.pid}`);
+  };
+
   return (
-    <div className="post-preview" onClick={onClick} style={{ cursor: onClick ? "pointer" : "default" }}>
+    <div
+      className="post-preview"
+      onClick={handleClick}
+      style={{ cursor: "pointer" }}
+    >
       <div className="post-preview-header">
         <span className="post-preview-title">{post.title}</span>
         <span className="post-preview-score">Score: {post.score}</span>

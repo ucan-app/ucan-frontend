@@ -1,20 +1,42 @@
-type LoginProps = {};
+import React, { useState } from "react";
 
-type LoginState = {};
+interface LoginProps {
+  onLogin: (username: string, password: string) => Promise<void>;
+}
 
-import React from 'react';
+const Login: React.FC<LoginProps> = ({ onLogin }) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-/*
-type LoginProps = {};
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await onLogin(username, password);
+  };
 
-type LoginState = {};
-*/
-
-// Define the component with explicit return type
-const Login: React.FC<{}> = () => {
   return (
     <div>
-      <h1>Login Page</h1>
+      <h2>Login</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Username:</label>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Password:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit">Login</button>
+      </form>
     </div>
   );
 };

@@ -1,0 +1,117 @@
+/* General styles */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header {
+  background-color: #674ea7ff;
+  color: white;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-style: italic;
+  font-family: 'Lato', sans-serif;
+  color: white;
+  text-decoration: none;
+}
+
+.user-menu {
+  position: relative;
+  margin-right: 1rem;
+}
+
+.user-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.user-icon-image {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid transparent; /* Transparent border for buffer zone */
+  padding: 5px;
+}
+
+/* Dropdown menu container */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  color: black;
+  border: 1px solid #ddd;
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 1000;
+  width: 150px;
+  display: none; /* Initially hidden */
+}
+
+/* Show dropdown menu on hover */
+.user-menu:hover .dropdown-menu {
+  display: block;
+}
+
+/* Dropdown menu items */
+.dropdown-menu li {
+  padding: 0.75rem 1rem; /* Add more padding for better spacing */
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0; /* Add a divider between items */
+}
+
+/* Remove border for the last item */
+.dropdown-menu li:last-child {
+  border-bottom: none;
+}
+
+/* Links and buttons inside the dropdown */
+.dropdown-menu li a,
+.dropdown-menu li button {
+  text-decoration: none;
+  color: #595959;
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem; /* Slightly smaller font size */
+  font-family: 'Lato', sans-serif;
+  font-style: italic;
+}
+
+/* Hover effect for dropdown items */
+.dropdown-menu li:hover {
+  background-color: #f9f9f9; /* Light gray hover effect */
+  border-radius: 8px; /* Rounded corners */
+}
+
+.main-content {
+  flex: 1;
+  padding: 1rem;
+}

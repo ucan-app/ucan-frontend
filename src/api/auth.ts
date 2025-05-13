@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Badge, Post, User } from "../types";
 
-const API_BASE_URL = "http://127.0.0.1:8080/api/auth";
+const API_BASE_URL = "http://127.0.0.1:8080";
 
 // Configure axios defaults
 const api = axios.create({
@@ -100,9 +100,12 @@ export const getPosts = async (params?: { tag?: string; search?: string; badge?:
   }
 };
 
-export const createPost = async (postData: { title: string; body: string; tag?: string }): Promise<Post> => {
+export const createPost = async (postData: { title: string; description: string; creatorId: number }): Promise<Post> => {
   try {
-    const response = await api.post("/posts", postData);
+    const response = await axios.post("http://127.0.0.1:8080/posts", postData, {
+      withCredentials: true,
+    });
+    console.log("Post response", response.data);
     return response.data;
   } catch (error: any) {
     handleApiError(error, "Failed to create post");

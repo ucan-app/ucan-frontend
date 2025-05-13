@@ -1,4 +1,4 @@
-import React, { JSX, useState, useEffect } from "react";
+import React, { JSX, useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -40,14 +40,20 @@ function App(): JSX.Element {
   }, []);
 
   // Authentication handlers
-  const handleLogin = async (username: string, password: string): Promise<any> => {
+  const handleLogin = async (
+    username: string,
+    password: string
+  ): Promise<any> => {
     try {
       //const user = await login(username, password);
       const user = fakeUser; // For testing purposes, use a fake user
-      setCurrentUser(user);
-      setIsLoggedIn(true);
-      localStorage.setItem("currentUser", JSON.stringify(user)); // Persist user
-
+      if (user) {
+        setCurrentUser(user);
+        setIsLoggedIn(true);
+        localStorage.setItem("currentUser", JSON.stringify(user)); // Persist user
+      } else {
+        throw new Error("Login failed: User is undefined");
+      }
       return user; // Return the user on successful login
     } catch (error) {
       console.error("Login failed:", error);
@@ -75,7 +81,7 @@ function App(): JSX.Element {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/posts/:id" element={<ViewPost />} />
+          <Route path="/post/:pid" element={<ViewPost />} />
           <Route
             path="/create"
             element={ <CreatePost user={currentUser} /> }

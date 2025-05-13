@@ -1,4 +1,4 @@
-import { User, Badge, Post, PostComment, Tag } from "./types";
+import { User, Badge, Post, PostComment, Tag, Userx } from "./types";
 
 // =========================
 // User-related dummy data
@@ -24,15 +24,17 @@ export const exampleBadges: Badge[] = [
   },
 ];
 
-export const dummyUser: User = {
+export const dummyUser: Userx = {
   uid: 1, // Username
   username: "testuser", // Username
   firstName: "John",
   lastName: "Wick",
   profilePicture: "null", // Base64 string
+  pid: 1, // Profile ID
   bio: "hi im cool",
   bioEdu: "uw",
   bioWork: "amazon",
+  graduationYear: 2024,
   linkedin: "https://www.linkedin.com/in/johnwick/",
   personalWebsite: "https://en.wikipedia.org/wiki/John_Wick",
   badges: [],

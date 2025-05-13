@@ -12,17 +12,59 @@ const ViewProfile: React.FC<ViewProfileProps> = ({ user }) => {
   if (!user) {
     return <p>No user is logged in. Please log in to view your profile.</p>;
   }
-
+  console.log("User logged in:", user);
   const handleEditProfile = () => {
     navigate("/edit");
   };
   
-  // ...existing code...
   return (
     <div>
       <h1>Profile</h1>
       <p>
-        <strong>Username:</strong> {user.uid}
+        <strong>Username:</strong> {user.fullname}
+      </p>
+      {user.bio && (
+        <p>
+         <strong>Bio:</strong> {user.bio}
+        </p>
+      )}
+      {user.graduationYear && (
+        <p>
+         <strong>Graduation Year:</strong> {user.graduationYear}
+        </p>
+      )}
+      {user.linkedinUrl && (
+        <p>
+          <strong>LinkedIn:</strong>{" "}
+          <a href={user.linkedinUrl} target="_blank" rel="noopener noreferrer">
+            {user.linkedinUrl}
+          </a>
+        </p>
+      )}
+      {user.personalWebsite && (
+        <p>
+          <strong>Personal Website:</strong>{" "}
+          <a
+            href={user.personalWebsite}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {user.personalWebsite}
+          </a>
+        </p>
+      )}
+
+      <button onClick={handleEditProfile}>
+        Edit Profile
+      </button>
+    </div>
+  );
+  /*
+  return (
+    <div>
+      <h1>Profile</h1>
+      <p>
+        <strong>Username:</strong> {user.fullname}
       </p>
       <p>
         <strong>First Name:</strong> {user.firstName}
@@ -30,9 +72,11 @@ const ViewProfile: React.FC<ViewProfileProps> = ({ user }) => {
       <p>
         <strong>Last Name:</strong> {user.lastName}
       </p>
-      <p>
-        <strong>Bio:</strong> {user.bio}
-      </p>
+      {user.bio && (
+        <p>
+         <strong>Bio:</strong> {user.bio}
+        </p>
+      )}
       {user.bioEdu && (
         <p>
           <strong>Education:</strong> {user.bioEdu}
@@ -68,7 +112,7 @@ const ViewProfile: React.FC<ViewProfileProps> = ({ user }) => {
         Edit Profile
       </button>
     </div>
-  );
+  );*/
 };
 
 export default ViewProfile;

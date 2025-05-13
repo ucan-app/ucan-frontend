@@ -6,12 +6,25 @@ const API_BASE_URL = "http://127.0.0.1:8080";
 // Configure axios defaults
 const api = axios.create({
   baseURL: API_BASE_URL,
-  withCredentials: true, // Important for cookie-based auth
+  withCredentials: true, // Important for cookie-based auths
   /*headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
   }*/
 }); 
+
+export const register = async (username: string, email: string, password: string): Promise<void> => {
+  try {
+    const response = await axios.post(
+      "http://127.0.0.1:8080/api/auth/register",
+      { username, email, password },
+      { withCredentials: true }
+    );
+    console.log("Registration response:", response.data);
+  } catch (error: any) {
+    handleApiError(error, "Registration failed. Please check your input.");
+  }
+};
 
 export const login = async (username: string, password: string): Promise<number | undefined> => {
   try {
@@ -36,6 +49,14 @@ export const login = async (username: string, password: string): Promise<number 
   }
 };
 
+export const logout = async (): Promise<void> => {
+  try {
+    await axios.post("http://127.0.0.1:8080/api/auth/logout", {}, { withCredentials: true });
+  } catch (error: any) {
+    handleApiError(error, "Logout failed. Please try again.");
+  }
+};
+
 // Profile endpoints
 export const getProfile = async (userId: number): Promise<User> => {
   try {
@@ -49,27 +70,16 @@ export const getProfile = async (userId: number): Promise<User> => {
   }
 };
 
-export const logout = async (): Promise<void> => {
+export const updateProfile = async (profileData: Partial<User>): Promise<User> => {
   try {
-    await axios.post("http://127.0.0.1:8080/api/auth/logout", {}, { withCredentials: true });
+    const response = await api.put("/profile/", profileData);
+    console.log("Update profile response:", response.data);
+    return response.data;
   } catch (error: any) {
-    handleApiError(error, "Logout failed. Please try again.");
+    handleApiError(error, "Failed to update profile");
+    throw error;
   }
 };
-
-export const register = async (username: string, email: string, password: string): Promise<void> => {
-  try {
-    const response = await axios.post(
-      "http://127.0.0.1:8080/api/auth/register",
-      { username, email, password },
-      { withCredentials: true }
-    );
-    console.log("Registration response:", response.data);
-  } catch (error: any) {
-    handleApiError(error, "Registration failed. Please check your input.");
-  }
-};
-
 
 export const requestBadgeVerification = async (badgeId: string): Promise<void> => {
   try {
@@ -141,15 +151,7 @@ export const votePost = async (postId: string, value: number): Promise<void> => 
   }
 };
 
-export const updateProfile = async (profileData: Partial<User>): Promise<User> => {
-  try {
-    const response = await api.put("/profile/me", profileData);
-    return response.data;
-  } catch (error: any) {
-    handleApiError(error, "Failed to update profile");
-    throw error;
-  }
-};
+
 
 // Helper function to handle API errors consistently
 const handleApiError = (error: any, defaultMessage: string): never => {

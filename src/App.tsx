@@ -39,11 +39,12 @@ function App(): JSX.Element {
       if(uid === undefined) {
         throw new Error("Login failed: uid is undefined");
       }
-      const user = await getProfile(uid);
+      const user: User = await getProfile(uid);
       //const user = fakeUser; // For testing purposes, use a fake user
       if (user) {
         setCurrentUser(user);
         setIsLoggedIn(true);
+        user.fullname = username; // should be username
         localStorage.setItem("currentUser", JSON.stringify(user)); // Persist user
       } else {
         throw new Error("Login failed: User is undefined");

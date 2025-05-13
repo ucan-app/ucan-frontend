@@ -1,15 +1,18 @@
 import React from "react";
+import { User } from "../types";
 
 interface LayoutProps {
   isLoggedIn: boolean;
   handleLogout: () => void;
+  currentUser: User | null;
   children: React.ReactNode;
 }
 
 const Layout: React.FC<LayoutProps> = ({
   isLoggedIn,
   handleLogout,
-  children,
+  currentUser,
+  children
 }) => (
   <div className="app-container">
     <header>

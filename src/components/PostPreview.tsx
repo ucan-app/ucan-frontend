@@ -19,7 +19,7 @@ const PostPreview: React.FC<PostPreviewProps> = ({ post }) => {
          style={{ cursor: "pointer" }}>
       <div className="post-left">
         <img
-          src="/profile_icon.png"
+          src="/profile_icon_black.png"
           alt="Profile"
           className="profile-icon"
         />

@@ -68,7 +68,7 @@ function App(): JSX.Element {
       setCurrentUser(null);
       setIsLoggedIn(false);
       localStorage.removeItem("currentUser"); // Clear persisted user
-
+      <Navigate to="/" />;
     } catch (error) {
       console.error("Logout failed:", error);
     }

@@ -26,8 +26,12 @@ function App(): JSX.Element {
   ): Promise<any> => {
     try {
       const user = await login(username, password);
-      setCurrentUser(user);
-      setIsLoggedIn(true);
+      if (user) {
+        setCurrentUser(user);
+        setIsLoggedIn(true);
+      } else {
+        throw new Error("Login failed: User is undefined");
+      }
       return user; // Return the user on successful login
     } catch (error) {
       console.error("Login failed:", error);

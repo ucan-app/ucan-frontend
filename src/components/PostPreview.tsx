@@ -1,5 +1,5 @@
 import React from "react";
-import { Post } from "../types";
+import { Post, calculatePostScore } from "../types";
 import { useNavigate } from "react-router-dom";
 
 interface PostPreviewProps {
@@ -21,7 +21,9 @@ const PostPreview: React.FC<PostPreviewProps> = ({ post }) => {
     >
       <div className="post-preview-header">
         <span className="post-preview-title">{post.title}</span>
-        <span className="post-preview-score">Score: {post.score}</span>
+        <span className="post-preview-score">
+          Score: {calculatePostScore(post)}
+        </span>
       </div>
       <div className="post-preview-content">{post.content}</div>
       <div className="post-preview-date">

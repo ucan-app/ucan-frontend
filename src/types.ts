@@ -10,40 +10,21 @@ export type Page =
   | "Verify";
 
 export type User = {
-  uid: string;
+  // Identification
+  uid: number;
+  username: string;
   firstName: string;
   lastName: string;
   profilePicture: string; // Base64 string
-  badges: Badge[];
+  // Bio
   bio: string;
   bioEdu: string;
   bioWork: string;
-  linkedin: string;
-  // Email and password will not be stored in browser
-};
-
-export type Post = {
-  uid: number;
-  pid: number;
-  title: string;
-  score: number;
-  content: string;
-  createdAt: Date;
-  isVotedByUser: Vote | null;
-  // All other votes will not be stored in browser
-};
-
-export type PostComment = {
-  uid: number;
-  pid: number;
-  cid: number;
-  content: string;
-  createdAt: Date;
-  isVotedByUser: Vote | null;
-};
-
-export type Vote = {
-  voteType: "UP" | "DOWN";
+  // Links
+  linkedinUrl: string;
+  personalWebsite: string;
+  badges: Badge[];
+  // Password will not be stored in browser
 };
 
 export type Badge = {
@@ -52,3 +33,45 @@ export type Badge = {
   companyName?: string;
   domain: string;
 };
+
+export type Post = {
+  uid: number;
+  pid: number;
+  title: string;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
+  tags: Tag[];
+  votes: { [uid: number]: Vote };
+};
+
+export type PostComment = {
+  uid: number;
+  pid: number;
+  cid: number;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
+  votes: { [uid: number]: Vote };
+};
+
+export type Tag = {
+  tid: number;
+  name: string;
+};
+
+export type Vote = {
+  voteType: "UP" | "DOWN";
+};
+
+export function calculatePostScore(post: Post): number {
+  let score = 0;
+  for (const vote of Object.values(post.votes)) {
+    if (vote.voteType === "UP") {
+      score++;
+    } else if (vote.voteType === "DOWN") {
+      score--;
+    }
+  }
+  return score;
+}

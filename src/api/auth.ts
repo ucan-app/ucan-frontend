@@ -11,7 +11,7 @@ const api = axios.create({
     'Content-Type': 'application/json',
     'Accept': 'application/json'
   }*/
-});
+}); 
 
 export const login = async (username: string, password: string): Promise<User | undefined> => {
   try {

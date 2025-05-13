@@ -10,7 +10,7 @@ export type Page =
   | "Verify";
 
 export type User = {
-  uid: number;
+  uid: string;
   firstName: string;
   lastName: string;
   profilePicture: string; // Base64 string
@@ -18,6 +18,7 @@ export type User = {
   bio: string;
   bioEdu: string;
   bioWork: string;
+  linkedin: string;
   // Email and password will not be stored in browser
 };
 

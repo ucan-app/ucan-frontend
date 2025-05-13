@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Post } from "../types";
 import PostPreview from "../components/PostPreview";
+import "../components/PostPreview.css";
 import { dummyPosts } from "../dummyData";
 
 function useQuery() {
@@ -38,8 +39,6 @@ const HomePage: React.FC = () => {
 
   return (
     <div>
-      <h1>Home Page</h1>
-      <p>Welcome to the home page!</p>
       {postList.map((post) => (
         <PostPreview key={post.pid} post={post} />
       ))}

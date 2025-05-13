@@ -47,8 +47,8 @@ body {
 }
 
 .user-icon-image {
-  width: 32px;
-  height: 32px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   border: 2px solid transparent; /* Transparent border for buffer zone */
   padding: 5px;
@@ -57,7 +57,7 @@ body {
 /* Dropdown menu container */
 .dropdown-menu {
   position: absolute;
-  top: 40px;
+  top: 100%;
   right: 0;
   background-color: white;
   color: black;

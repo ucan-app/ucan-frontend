@@ -12,6 +12,7 @@ import ViewProfile from "./pages/ViewProfile";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ViewPost from "./pages/ViewPost";
+import EditProfile from "./pages/EditProfile";
 import CreatePost from "./pages/CreatePost";
 import { User } from "./types";
 import { dummyUser } from "./dummyData";
@@ -76,6 +77,8 @@ function App(): JSX.Element {
           <Route path="/post/:pid" element={<ViewPost />} />
           <Route path="/create" element={<CreatePost user={currentUser} />} />
           <Route path="/profile" element={<ViewProfile user={currentUser} />} />
+          <Route path="/edit" element={<EditProfile user={currentUser} onSave={setCurrentUser} />} />
+          {/* Redirect to home if no match */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Layout>

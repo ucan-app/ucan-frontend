@@ -13,22 +13,38 @@ export type Page =
 // User-related Types
 // =========================
 
-export type User = {
+export type Userx = {
   // Identification
   uid: number;
   username: string;
   firstName: string;
   lastName: string;
   profilePicture: string; // Base64 string
+  pid: number; // Profile ID
   // Bio
   bio: string;
   bioEdu: string;
   bioWork: string;
+  graduationYear: number;
   // Links
   linkedin: string;
   personalWebsite: string;
   badges: Badge[];
   // Password will not be stored in browser
+};
+
+export type User = {
+  // Identification
+  id: number;
+  userid: number;
+  fullname: string; // username
+  linkedinUrl: string;
+  personalWebsite: string;
+  bio: string;
+  graduationYear: number;
+  badges: Badge[];
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type Badge = {

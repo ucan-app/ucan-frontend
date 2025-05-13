@@ -12,6 +12,7 @@ import ViewProfile from "./pages/ViewProfile";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ViewPost from "./pages/ViewPost";
+import EditProfile from "./pages/EditProfile";
 import CreatePost from "./pages/CreatePost";
 import { User } from "./types";
 import { dummyUser } from "./dummyData";
@@ -38,11 +39,12 @@ function App(): JSX.Element {
       if(uid === undefined) {
         throw new Error("Login failed: uid is undefined");
       }
-      const user = await getProfile(uid);
+      const user: User = await getProfile(uid);
       //const user = fakeUser; // For testing purposes, use a fake user
       if (user) {
         setCurrentUser(user);
         setIsLoggedIn(true);
+        user.fullname = username; // should be username
         localStorage.setItem("currentUser", JSON.stringify(user)); // Persist user
       } else {
         throw new Error("Login failed: User is undefined");
@@ -80,6 +82,8 @@ function App(): JSX.Element {
           <Route path="/post/:pid" element={<ViewPost />} />
           <Route path="/create" element={<CreatePost user={currentUser} />} />
           <Route path="/profile" element={<ViewProfile user={currentUser} />} />
+          <Route path="/edit" element={<EditProfile user={currentUser} onSave={setCurrentUser} />} />
+          {/* Redirect to home if no match */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Layout>

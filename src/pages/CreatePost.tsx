@@ -27,7 +27,7 @@ const CreatePost: React.FC<CreatePostProps> = ({ user }) => {
       await createPost({
         title,
         description,
-        creatorId: user.uid, // Pass the creatorId from the user prop
+        creatorId: user.userid, // Pass the creatorId from the user prop
       });
       setSuccess("Post created successfully!");
       setTitle(""); // Clear the form
@@ -44,7 +44,7 @@ const CreatePost: React.FC<CreatePostProps> = ({ user }) => {
       <h1>Create Post</h1>
       {user ? (
         <p>
-          Posting as: {user.firstName} {user.lastName}
+          Posting as: {user.fullname}
         </p>
       ) : (
         <p>Please log in to create a post</p>

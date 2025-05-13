@@ -5,7 +5,7 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import { login, logout } from "./api/auth"; // Import API functions
+import { getProfile, login, logout } from "./api/auth"; // Import API functions
 import Layout from "./components/Layout";
 import HomePage from "./pages/HomePage";
 import ViewProfile from "./pages/ViewProfile";
@@ -45,8 +45,12 @@ function App(): JSX.Element {
     password: string
   ): Promise<any> => {
     try {
-      //const user = await login(username, password);
-      const user = fakeUser; // For testing purposes, use a fake user
+      const uid: number | undefined = await login(username, password);
+      if(uid === undefined) {
+        throw new Error("Login failed: uid is undefined");
+      }
+      const user = await getProfile(uid);
+      //const user = fakeUser; // For testing purposes, use a fake user
       if (user) {
         setCurrentUser(user);
         setIsLoggedIn(true);
@@ -64,7 +68,7 @@ function App(): JSX.Element {
 
   const handleLogout = async () => {
     try {
-      //await logout();
+      await logout();
       setCurrentUser(null);
       setIsLoggedIn(false);
       localStorage.removeItem("currentUser"); // Clear persisted user

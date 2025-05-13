@@ -13,16 +13,22 @@ const api = axios.create({
   }*/
 }); 
 
-export const login = async (username: string, password: string): Promise<User | undefined> => {
+export const login = async (username: string, password: string): Promise<number | undefined> => {
   try {
     // Using application/x-www-form-urlencoded format as expected by Spring Security
-    const response = await axios.post(
+    /*const response = await axios.post(
       "http://127.0.0.1:8080/api/auth/login",
       new URLSearchParams({ username, password }),
+      { withCredentials: true }
+    );*/
+    const response = await axios.post(
+      "http://127.0.0.1:8080/api/auth/login",
+      { username, password }, // Send as JSON
       { withCredentials: true }
     );
 
     // Return user data if the response is successful
+    console.log("Login response:", response.data);
     return response.data;
   } catch (error: any) {
     handleApiError(error, "Login failed. Please check your credentials.");
@@ -30,9 +36,22 @@ export const login = async (username: string, password: string): Promise<User | 
   }
 };
 
+// Profile endpoints
+export const getProfile = async (userId: number): Promise<User> => {
+  try {
+    const response = await axios.get(`http://127.0.0.1:8080/profile/${userId}`, {
+      withCredentials: true,});
+    console.log("Profile response:", response.data);
+    return response.data;
+  } catch (error: any) {
+    handleApiError(error, "Failed to fetch profile");
+    throw error;
+  }
+};
+
 export const logout = async (): Promise<void> => {
   try {
-    await axios.post("http://127.0.0.1:8080/logout", {}, { withCredentials: true });
+    await axios.post("http://127.0.0.1:8080/api/auth/logout", {}, { withCredentials: true });
   } catch (error: any) {
     handleApiError(error, "Logout failed. Please try again.");
   }
@@ -115,17 +134,6 @@ export const votePost = async (postId: string, value: number): Promise<void> => 
     await api.post(`/posts/${postId}/vote`, { value });
   } catch (error: any) {
     handleApiError(error, "Failed to vote on post");
-  }
-};
-
-// Profile endpoints
-export const getProfile = async (userId: string): Promise<User> => {
-  try {
-    const response = await api.get(`/profile/${userId}`);
-    return response.data;
-  } catch (error: any) {
-    handleApiError(error, "Failed to fetch profile");
-    throw error;
   }
 };
 

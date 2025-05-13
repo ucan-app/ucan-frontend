@@ -9,6 +9,10 @@ export type Page =
   | "AddBadge"
   | "Verify";
 
+// =========================
+// User-related Types
+// =========================
+
 export type User = {
   // Identification
   uid: number;
@@ -21,7 +25,7 @@ export type User = {
   bioEdu: string;
   bioWork: string;
   // Links
-  linkedinUrl: string;
+  linkedin: string;
   personalWebsite: string;
   badges: Badge[];
   // Password will not be stored in browser
@@ -33,6 +37,10 @@ export type Badge = {
   companyName?: string;
   domain: string;
 };
+
+// =========================
+// Post-related Types
+// =========================
 
 export type Post = {
   uid: number;

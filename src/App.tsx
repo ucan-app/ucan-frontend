@@ -5,7 +5,7 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import { login, logout } from "./api/auth"; // Import API functions
+// import { login, logout } from "./api/auth"; // Import API functions
 import Layout from "./components/Layout";
 import HomePage from "./pages/HomePage";
 import ViewProfile from "./pages/ViewProfile";
@@ -14,18 +14,7 @@ import Signup from "./pages/Signup";
 import ViewPost from "./pages/ViewPost";
 import CreatePost from "./pages/CreatePost";
 import { User } from "./types";
-
-const fakeUser: User = {
-  uid: "testuser", // Username
-  firstName: "John",
-  lastName: "Wick",
-  profilePicture: "null", // Base64 string
-  badges: [],
-  bio: "hi im cool",
-  bioEdu: "uw",
-  bioWork: "amazon",
-  linkedin: "https://www.linkedin.com/in/johnwick/",
-};
+import { dummyUser } from "./dummyData";
 
 function App(): JSX.Element {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -46,7 +35,7 @@ function App(): JSX.Element {
   ): Promise<any> => {
     try {
       //const user = await login(username, password);
-      const user = fakeUser; // For testing purposes, use a fake user
+      const user = dummyUser; // For testing purposes, use a fake user
       if (user) {
         setCurrentUser(user);
         setIsLoggedIn(true);
@@ -68,7 +57,6 @@ function App(): JSX.Element {
       setCurrentUser(null);
       setIsLoggedIn(false);
       localStorage.removeItem("currentUser"); // Clear persisted user
-
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -76,16 +64,17 @@ function App(): JSX.Element {
 
   return (
     <Router>
-      <Layout isLoggedIn={isLoggedIn} handleLogout={handleLogout} currentUser={currentUser}>
+      <Layout
+        isLoggedIn={isLoggedIn}
+        handleLogout={handleLogout}
+        currentUser={currentUser}
+      >
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/post/:pid" element={<ViewPost />} />
-          <Route
-            path="/create"
-            element={ <CreatePost user={currentUser} /> }
-          />
+          <Route path="/create" element={<CreatePost user={currentUser} />} />
           <Route path="/profile" element={<ViewProfile user={currentUser} />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

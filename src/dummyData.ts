@@ -1,6 +1,48 @@
-import { Post, PostComment, Tag, Vote } from "./types";
+import { User, Badge, Post, PostComment, Tag } from "./types";
 
-const exTags: Tag[] = [
+// =========================
+// User-related dummy data
+// =========================
+
+export const exampleBadges: Badge[] = [
+  {
+    bid: "1",
+    type: "UW",
+    domain: "Computer Science",
+  },
+  {
+    bid: "2",
+    type: "COMPANY",
+    companyName: "Amazon",
+    domain: "Software Development",
+  },
+  {
+    bid: "3",
+    type: "COMPANY",
+    companyName: "Microsoft",
+    domain: "Cloud Computing",
+  },
+];
+
+export const dummyUser: User = {
+  uid: 1, // Username
+  username: "testuser", // Username
+  firstName: "John",
+  lastName: "Wick",
+  profilePicture: "null", // Base64 string
+  bio: "hi im cool",
+  bioEdu: "uw",
+  bioWork: "amazon",
+  linkedin: "https://www.linkedin.com/in/johnwick/",
+  personalWebsite: "https://en.wikipedia.org/wiki/John_Wick",
+  badges: [],
+};
+
+// =========================
+// Post-related dummy data
+// =========================
+
+export const exampleTags: Tag[] = [
   { tid: 1, name: "General" },
   { tid: 2, name: "Off-Topic" },
 ];
@@ -13,7 +55,7 @@ export const dummyPosts: Post[] = [
     content: "This is the first dummy post.",
     createdAt: new Date(),
     updatedAt: new Date(),
-    tags: [exTags[0]],
+    tags: [exampleTags[0]],
     votes: {
       1: { voteType: "UP" },
       2: { voteType: "DOWN" },
@@ -27,7 +69,7 @@ export const dummyPosts: Post[] = [
     content: "This is the second dummy post.",
     createdAt: new Date(),
     updatedAt: new Date(),
-    tags: [exTags[0], exTags[1]],
+    tags: [exampleTags[0], exampleTags[1]],
     votes: {
       2: { voteType: "UP" },
     },

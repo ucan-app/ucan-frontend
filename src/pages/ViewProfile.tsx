@@ -13,16 +13,38 @@ const ViewProfile: React.FC<ViewProfileProps> = ({ user }) => {
   return (
     <div>
       <h1>Profile</h1>
-      <p><strong>Username:</strong> {user.uid}</p>
-      <p><strong>First Name:</strong> {user.firstName}</p>
-      <p><strong>Last Name:</strong> {user.lastName}</p>
-      <p><strong>Bio:</strong> {user.bio}</p>
-      <p><strong>Education:</strong> {user.bioEdu}</p>
-      <p><strong>Work:</strong> {user.bioWork}</p>
+      <p>
+        <strong>Username:</strong> {user.uid}
+      </p>
+      <p>
+        <strong>First Name:</strong> {user.firstName}
+      </p>
+      <p>
+        <strong>Last Name:</strong> {user.lastName}
+      </p>
+      <p>
+        <strong>Bio:</strong> {user.bio}
+      </p>
+      <p>
+        <strong>Education:</strong> {user.bioEdu}
+      </p>
+      <p>
+        <strong>Work:</strong> {user.bioWork}
+      </p>
       <p>
         <strong>LinkedIn:</strong>{" "}
         <a href={user.linkedin} target="_blank" rel="noopener noreferrer">
           {user.linkedin}
+        </a>
+      </p>
+      <p>
+        <strong>Personal Website:</strong>{" "}
+        <a
+          href={user.personalWebsite}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {user.personalWebsite}
         </a>
       </p>
     </div>

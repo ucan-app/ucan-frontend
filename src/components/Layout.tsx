@@ -45,6 +45,9 @@ const Layout: React.FC<LayoutProps> = ({
                     <a href="/profile">Profile</a>
                   </li>
                   <li>
+                    <a href="/create">Create Post</a>
+                  </li>
+                  <li>
                     <button onClick={handleLogoutAndRedirect}>Logout</button>
                   </li>
                 </>

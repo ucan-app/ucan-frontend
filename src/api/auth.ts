@@ -80,7 +80,7 @@ export const getPosts = async (params?: { tag?: string; search?: string; badge?:
   }
 };
 
-export const createPost = async (postData: { title: string; description: string; creatorId: string }): Promise<Post> => {
+export const createPost = async (postData: { title: string; description: string; creatorId: number }): Promise<Post> => {
   try {
     const response = await axios.post("http://127.0.0.1:8080/posts", postData, {
       withCredentials: true,

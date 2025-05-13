@@ -1,6 +1,7 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import { User } from "../types";
+import "./Layout.css";
 
 interface LayoutProps {
   isLoggedIn: boolean;
@@ -13,46 +14,52 @@ const Layout: React.FC<LayoutProps> = ({
   isLoggedIn,
   handleLogout,
   currentUser,
-  children
+  children,
 }) => {
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleLogoutAndRedirect = () => {
-    handleLogout(); // Call the provided logout function
-    navigate("/"); // Redirect to home page
+    handleLogout();
+    navigate("/");
   };
 
   return (
     <div className="app-container">
-      <header>
-        <nav className="main-nav">
-          <ul>
-            <li>
-              <a href="/">Home</a>
-            </li>
-            {isLoggedIn ? (
-              <>
-                <li>
-                  <a href="/profile">Profile</a>
-                </li>
-                <li>
-                  <a href="/create">Create Post</a>
-                </li>
-                <li>
-                  <button onClick={handleLogoutAndRedirect}>Logout</button>
-                </li>
-              </>
-            ) : (
-              <>
-                <li>
-                  <a href="/login">Login</a>
-                </li>
-                <li>
-                  <a href="/signup">Sign Up</a>
-                </li>
-              </>
-            )}
-          </ul>
+      <header className="header">
+        <nav className="nav-bar">
+          <a href="/" className="logo">
+            UCAN
+          </a>
+          <div className="user-menu">
+            <button className="user-icon">
+              <img
+                src="/profile_icon.png"
+                alt="User"
+                className="user-icon-image"
+              />
+            </button>
+            <ul className="dropdown-menu">
+              {isLoggedIn ? (
+                <>
+                  <li>
+                    <a href="/profile">Profile</a>
+                  </li>
+                  <li>
+                    <button onClick={handleLogoutAndRedirect}>Logout</button>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <a href="/login">Login</a>
+                  </li>
+                  <li>
+                    <a href="/signup">Sign Up</a>
+                  </li>
+                </>
+              )}
+            </ul>
+          </div>
         </nav>
       </header>
       <main className="main-content">{children}</main>

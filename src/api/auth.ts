@@ -59,11 +59,12 @@ export const logout = async (): Promise<void> => {
 
 export const register = async (username: string, email: string, password: string): Promise<void> => {
   try {
-    await axios.post(
+    const response = await axios.post(
       "http://127.0.0.1:8080/api/auth/register",
       { username, email, password },
       { withCredentials: true }
     );
+    console.log("Registration response:", response.data);
   } catch (error: any) {
     handleApiError(error, "Registration failed. Please check your input.");
   }

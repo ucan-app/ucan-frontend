@@ -1,0 +1,64 @@
+/* Post container */
+.post-preview {
+  display: flex;
+  align-items: flex-start;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px; /* Rounded corners */
+  padding: 1rem;
+  margin-bottom: 1rem; /* Space between posts */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Left section for profile icon */
+.post-left {
+  margin-right: 1rem;
+}
+
+.profile-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%; /* Circular profile icon */
+}
+
+/* Right section for post details */
+.post-right {
+  flex: 1;
+}
+
+/* Post header (author and role) */
+.post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.post-author {
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.post-role {
+  font-size: 0.9rem;
+  color: #888;
+  background-color: #f0f0f0;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+/* Post title */
+.post-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+/* Post content */
+.post-content {
+  font-size: 0.9rem;
+  color: #595959;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; /* Ensure content stays on one line */
+}

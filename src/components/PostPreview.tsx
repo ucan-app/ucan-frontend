@@ -1,5 +1,5 @@
 import React from "react";
-import { Post, calculatePostScore } from "../types";
+import { Post } from "../types";
 import { useNavigate } from "react-router-dom";
 
 interface PostPreviewProps {
@@ -14,22 +14,27 @@ const PostPreview: React.FC<PostPreviewProps> = ({ post }) => {
   };
 
   return (
-    <div
-      className="post-preview"
-      onClick={handleClick}
-      style={{ cursor: "pointer" }}
-    >
-      <div className="post-preview-header">
-        <span className="post-preview-title">{post.title}</span>
-        <span className="post-preview-score">
-          Score: {calculatePostScore(post)}
-        </span>
+    <div className="post-preview"
+         onClick={handleClick}
+         style={{ cursor: "pointer" }}>
+      <div className="post-left">
+        <img
+          src="/profile_icon.png"
+          alt="Profile"
+          className="profile-icon"
+        />
       </div>
-      <div className="post-preview-content">{post.content}</div>
-      <div className="post-preview-date">
-        {post.createdAt instanceof Date
-          ? post.createdAt.toLocaleDateString()
-          : new Date(post.createdAt).toLocaleDateString()}
+      <div className="post-right">
+        <div className="post-header">
+          <span className="post-author">Name</span>
+          <span className="post-role">badge</span>
+        </div>
+        <div className="post-title">{post.title}</div>
+        <div className="post-content">
+          {post.content.length > 100
+            ? `${post.content.slice(0, 100)}...`
+            : post.content}
+        </div>
       </div>
     </div>
   );

@@ -81,6 +81,19 @@ export const updateProfile = async (profileData: Partial<User>): Promise<User> =
   }
 };
 
+export const createPost = async (postData: { title: string; description: string; creatorId: number }): Promise<Post> => {
+  try {
+    const response = await axios.post("http://127.0.0.1:8080/api/posts", postData, {
+      withCredentials: true,
+    });
+    console.log("Post response", response.data);
+    return response.data;
+  } catch (error: any) {
+    handleApiError(error, "Failed to create post");
+    throw error;
+  }
+};
+
 export const requestBadgeVerification = async (badgeId: string): Promise<void> => {
   try {
     await api.post(`/badge/${badgeId}`);
@@ -107,19 +120,6 @@ export const getPosts = async (params?: { tag?: string; search?: string; badge?:
   } catch (error: any) {
     handleApiError(error, "Failed to fetch posts");
     return [];
-  }
-};
-
-export const createPost = async (postData: { title: string; description: string; creatorId: number }): Promise<Post> => {
-  try {
-    const response = await axios.post("http://127.0.0.1:8080/posts", postData, {
-      withCredentials: true,
-    });
-    console.log("Post response", response.data);
-    return response.data;
-  } catch (error: any) {
-    handleApiError(error, "Failed to create post");
-    throw error;
   }
 };
 

@@ -17,7 +17,6 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onSave }) => {
   const initialUser: User | null = user || (location.state && location.state.user);
 
   //const [firstName, setFirstName] = useState(initialUser?.firstName || "");
-  const [fullname, setFullName] = useState(initialUser?.fullname || "");
   const [bio, setBio] = useState(initialUser?.bio || "");
   //const [bioEdu, setBioEdu] = useState(initialUser?.bioEdu || "");
   //const [bioWork, setBioWork] = useState(initialUser?.bioWork || "");
@@ -34,8 +33,8 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onSave }) => {
     const updatedUser: User = {
       ...initialUser,
       id: initialUser.id,
-      userid: initialUser.userid,
-      fullname: initialUser.fullname,
+      userId: initialUser.userId,
+      fullName: initialUser.fullName,
       linkedinUrl,
       personalWebsite,
       bio,

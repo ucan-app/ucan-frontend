@@ -2,43 +2,53 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PostFull from "../components/PostFull";
 import { Post, PostComment } from "../types";
-import { dummyPosts, dummyComments } from "../dummyData";
-
-async function fetchPostAndComments(
-  pid: number
-): Promise<{ post: Post | null; comments: PostComment[] }> {
-  // Not implemented yet
-  return { post: null, comments: [] };
-}
+import { getPost } from "../api/auth"; // Import the API function
+import { dummyComments } from "../dummyData"; // Keep for now until we have comments API
 
 const ViewPost: React.FC = () => {
   const { pid } = useParams<{ pid: string }>();
   const [post, setPost] = useState<Post | null>(null);
   const [comments, setComments] = useState<PostComment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      const id = Number(pid);
-      const { post, comments } = await fetchPostAndComments(id);
-
-      if (post) {
-        setPost(post);
-        setComments(comments);
-      } else {
-        // Fallback to dummy data
-        const dummyPost = dummyPosts.find((p) => p.pid === id) || dummyPosts[0];
-        const dummyComms = dummyComments.filter((c) => c.pid === dummyPost.pid);
-        setPost(dummyPost);
-        setComments(dummyComms);
+    const fetchPostData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        if (!pid) {
+          throw new Error("Post ID is missing");
+        }
+        
+        const postId = parseInt(pid, 10);
+        if (isNaN(postId)) {
+          throw new Error("Invalid Post ID");
+        }
+        
+        // Fetch the post from the API
+        const postData: Post = await getPost(postId);
+        setPost(postData);
+        
+        // For now, use dummy comments or empty array
+        // Later you can implement a getCommentsByPostId API
+        const postComments = dummyComments.filter(c => c.postId === postId);
+        setComments(postComments);
+        
+      } catch (err: any) {
+        console.error("Failed to fetch post:", err);
+        setError("Failed to load post: " + (err.message || "Unknown error"));
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
-    load();
+    
+    fetchPostData();
   }, [pid]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>Loading post...</div>;
+  if (error) return <div className="error-message">{error}</div>;
   if (!post) return <div>Post not found.</div>;
 
   return (

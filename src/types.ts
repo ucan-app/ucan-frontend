@@ -1,4 +1,4 @@
-export type Page =
+export type PageName =
   | "Home"
   | "ViewProf"
   | "EditProf"
@@ -36,8 +36,8 @@ export type Userx = {
 export type User = {
   // Identification
   id: number;
-  userid: number;
-  fullname: string; // username
+  userId: number;
+  fullName: string; // username
   linkedinUrl: string;
   personalWebsite: string;
   bio: string;
@@ -59,24 +59,52 @@ export type Badge = {
 // =========================
 
 export type Post = {
-  uid: number;
-  pid: number;
+  id: number;
   title: string;
-  content: string;
+  description: string;
+  creatorId: number;
   createdAt: Date;
   updatedAt: Date;
-  tags: Tag[];
-  votes: { [uid: number]: Vote };
 };
 
+// This interface matches Spring Data's Page interface
+export interface Page<T> {
+  content: T[];                // The actual items
+  number: number;              // Current page number (0-based)
+  size: number;                // Page size
+  totalElements: number;       // Total number of items across all pages
+  totalPages: number;          // Total number of pages
+  first: boolean;              // Whether this is the first page
+  last: boolean;               // Whether this is the last page
+  numberOfElements: number;    // Number of elements in the current page
+  empty: boolean;              // Whether the page is empty
+  // The pageable property often includes pagination metadata
+  pageable: {
+    offset: number;            // The offset of the current page
+    pageNumber: number;        // Current page number (0-based)
+    pageSize: number;          // Page size
+    paged: boolean;            // Whether pagination is enabled
+    unpaged: boolean;          // Whether pagination is disabled
+    sort: {                    // Sort information
+      sorted: boolean;
+      unsorted: boolean;
+      empty: boolean;
+    };
+  };
+  sort: {                      // Sort information
+    sorted: boolean;
+    unsorted: boolean;
+    empty: boolean;
+  };
+}
+
 export type PostComment = {
-  uid: number;
-  pid: number;
-  cid: number;
+  id: number;
+  postId: number;
+  authorId: number;
   content: string;
+  replyCount: number;
   createdAt: Date;
-  updatedAt: Date;
-  votes: { [uid: number]: Vote };
 };
 
 export type Tag = {
@@ -87,7 +115,7 @@ export type Tag = {
 export type Vote = {
   voteType: "UP" | "DOWN";
 };
-
+/*
 export function calculatePostScore(post: Post): number {
   let score = 0;
   for (const vote of Object.values(post.votes)) {
@@ -99,3 +127,4 @@ export function calculatePostScore(post: Post): number {
   }
   return score;
 }
+*/

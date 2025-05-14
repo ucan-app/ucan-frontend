@@ -22,12 +22,17 @@ const CreatePost: React.FC<CreatePostProps> = ({ user }) => {
       setError("Both title and description are required.");
       return;
     }
+/*
+  if (user.userid === undefined || user.userid === null) {
+    setError("User ID is missing. Please log in again.");
+    return;
+  }*/
 
     try {
       await createPost({
         title,
         description,
-        creatorId: user.userid, // Pass the creatorId from the user prop
+        creatorId: user.userId, // Pass the creatorId from the user prop
       });
       setSuccess("Post created successfully!");
       setTitle(""); // Clear the form
@@ -44,7 +49,7 @@ const CreatePost: React.FC<CreatePostProps> = ({ user }) => {
       <h1>Create Post</h1>
       {user ? (
         <p>
-          Posting as: {user.fullname}
+          Posting as: {user.fullName}
         </p>
       ) : (
         <p>Please log in to create a post</p>

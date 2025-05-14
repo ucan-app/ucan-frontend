@@ -10,7 +10,7 @@ const PostPreview: React.FC<PostPreviewProps> = ({ post }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/post/${post.pid}`);
+    navigate(`/post/${post.id}`);
   };
 
   return (
@@ -31,9 +31,9 @@ const PostPreview: React.FC<PostPreviewProps> = ({ post }) => {
         </div>
         <div className="post-title">{post.title}</div>
         <div className="post-content">
-          {post.content.length > 100
-            ? `${post.content.slice(0, 100)}...`
-            : post.content}
+          {post.description.length > 100
+            ? `${post.description.slice(0, 100)}...`
+            : post.description}
         </div>
       </div>
     </div>

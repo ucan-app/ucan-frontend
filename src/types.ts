@@ -36,8 +36,8 @@ export type Userx = {
 export type User = {
   // Identification
   id: number;
-  userid: number;
-  fullname: string; // username
+  userId: number;
+  fullName: string; // username
   linkedinUrl: string;
   personalWebsite: string;
   bio: string;
@@ -59,24 +59,21 @@ export type Badge = {
 // =========================
 
 export type Post = {
-  uid: number;
-  pid: number;
+  id: number;
   title: string;
-  content: string;
+  description: string;
+  creatorId: number;
   createdAt: Date;
   updatedAt: Date;
-  tags: Tag[];
-  votes: { [uid: number]: Vote };
 };
 
 export type PostComment = {
-  uid: number;
-  pid: number;
-  cid: number;
+  id: number;
+  postId: number;
+  authorId: number;
   content: string;
+  replyCount: number;
   createdAt: Date;
-  updatedAt: Date;
-  votes: { [uid: number]: Vote };
 };
 
 export type Tag = {
@@ -87,7 +84,7 @@ export type Tag = {
 export type Vote = {
   voteType: "UP" | "DOWN";
 };
-
+/*
 export function calculatePostScore(post: Post): number {
   let score = 0;
   for (const vote of Object.values(post.votes)) {
@@ -99,3 +96,4 @@ export function calculatePostScore(post: Post): number {
   }
   return score;
 }
+*/

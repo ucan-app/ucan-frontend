@@ -81,7 +81,7 @@ export const updateProfile = async (profileData: Partial<User>): Promise<User> =
   }
 };
 
-export const createPost = async (postData: { title: string; description: string; creatorId: number }): Promise<Post> => {
+/*export const createPost = async (postData: { title: string; description: string; creatorId: number }): Promise<Post> => {
   try {
     const response = await axios.post("http://127.0.0.1:8080/api/posts", postData, {
       withCredentials: true,
@@ -90,6 +90,71 @@ export const createPost = async (postData: { title: string; description: string;
     return response.data;
   } catch (error: any) {
     handleApiError(error, "Failed to create post");
+    throw error;
+  }
+};*/
+export const createPost = async (postData: { title: string; description: string; creatorId: number }): Promise<Post> => {
+  try {
+    // Create URLSearchParams to match the @RequestParam format expected by the backend
+    const params = new URLSearchParams();
+    params.append('title', postData.title);
+    params.append('description', postData.description);
+    params.append('creatorId', postData.creatorId.toString());
+
+    const response = await axios.post(
+      "http://127.0.0.1:8080/api/posts", 
+      params, // Send as URL parameters instead of JSON body
+      {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded', // Required for @RequestParam
+        },
+      }
+    );
+    console.log("Post response", response.data);
+    return response.data;
+  } catch (error: any) {
+    handleApiError(error, "Failed to create post");
+    throw error;
+  }
+};
+
+// Post endpoints
+/*export const getAllPosts = async (params?: { tag?: string; search?: string; badge?: string }): Promise<Post[]> => {
+  try {
+    const response = await api.get("/api/posts", { params });
+    return response.data;
+  } catch (error: any) {
+    handleApiError(error, "Failed to fetch posts");
+    return [];
+  }
+};*/
+
+export const getAllPosts = async (
+  page: number = 0, 
+  size: number = 10
+): Promise<Post[]> => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}`,
+      { 
+        params: { page, size },
+        withCredentials: true 
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error("Failed to fetch posts:", error);
+    throw error;
+  }
+};
+
+export const getPost = async (postId: string): Promise<{ post: Post; comments: Comment[] }> => {
+  try {
+    const response = await api.get(`/posts/${postId}`);
+    return response.data;
+  } catch (error: any) {
+    handleApiError(error, "Failed to fetch post");
     throw error;
   }
 };
@@ -108,27 +173,6 @@ export const verifyBadge = async (badgeId: string, verificationCode: string): Pr
     return response.data;
   } catch (error: any) {
     handleApiError(error, "Badge verification failed");
-    throw error;
-  }
-};
-
-// Post endpoints
-export const getPosts = async (params?: { tag?: string; search?: string; badge?: string }): Promise<Post[]> => {
-  try {
-    const response = await api.get("/posts", { params });
-    return response.data;
-  } catch (error: any) {
-    handleApiError(error, "Failed to fetch posts");
-    return [];
-  }
-};
-
-export const getPost = async (postId: string): Promise<{ post: Post; comments: Comment[] }> => {
-  try {
-    const response = await api.get(`/posts/${postId}`);
-    return response.data;
-  } catch (error: any) {
-    handleApiError(error, "Failed to fetch post");
     throw error;
   }
 };

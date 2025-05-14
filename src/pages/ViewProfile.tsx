@@ -20,6 +20,9 @@ const ViewProfile: React.FC<ViewProfileProps> = ({ user }) => {
   return (
     <div>
       <h1>Profile</h1> 
+      <p>
+        <strong>Username:</strong> {user.fullName}
+      </p>
       {user.bio && (
         <p>
          <strong>Bio:</strong> {user.bio}

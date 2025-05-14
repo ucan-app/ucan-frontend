@@ -40,7 +40,7 @@ const HomePage: React.FC = () => {
   return (
     <div>
       {postList.map((post) => (
-        <PostPreview key={post.pid} post={post} />
+        <PostPreview key={post.id} post={post} />
       ))}
     </div>
   );

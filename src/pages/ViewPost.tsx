@@ -28,8 +28,8 @@ const ViewPost: React.FC = () => {
         setComments(comments);
       } else {
         // Fallback to dummy data
-        const dummyPost = dummyPosts.find((p) => p.pid === id) || dummyPosts[0];
-        const dummyComms = dummyComments.filter((c) => c.pid === dummyPost.pid);
+        const dummyPost = dummyPosts.find((p) => p.id === id) || dummyPosts[0];
+        const dummyComms = dummyComments.filter((c) => c.postId === dummyPost.id);
         setPost(dummyPost);
         setComments(dummyComms);
       }

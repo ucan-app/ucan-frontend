@@ -44,7 +44,8 @@ function App(): JSX.Element {
       if (user) {
         setCurrentUser(user);
         setIsLoggedIn(true);
-        user.fullname = username; // should be username
+        user.fullName = username; // should be username
+        console.log("User logged in as has userid:", user.userId);
         localStorage.setItem("currentUser", JSON.stringify(user)); // Persist user
       } else {
         throw new Error("Login failed: User is undefined");

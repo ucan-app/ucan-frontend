@@ -1,5 +1,5 @@
 import React from "react";
-import { Post, PostComment, calculatePostScore } from "../types";
+import { Post, PostComment } from "../types";
 import Comment from "./Comment";
 
 interface PostFullProps {
@@ -12,11 +12,9 @@ const PostFull: React.FC<PostFullProps> = ({ post, comments }) => {
     <div className="post-full">
       <div className="post-full-header">
         <h2 className="post-full-title">{post.title}</h2>
-        <span className="post-full-score">
-          Score: {calculatePostScore(post)}
-        </span>
+        
       </div>
-      <div className="post-full-content">{post.content}</div>
+      <div className="post-full-content">{post.description}</div>
       <div className="post-full-date">
         {post.createdAt instanceof Date
           ? post.createdAt.toLocaleDateString()
@@ -24,7 +22,7 @@ const PostFull: React.FC<PostFullProps> = ({ post, comments }) => {
       </div>
       <div className="post-full-comments">
         {comments.map((comment) => (
-          <Comment key={comment.cid} comment={comment} />
+          <Comment key={comment.authorId} comment={comment} />
         ))}
       </div>
     </div>

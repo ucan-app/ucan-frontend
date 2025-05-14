@@ -26,8 +26,8 @@ export const exampleBadges: Badge[] = [
 
 export const dummyUser: User = {
   id: 1,
-  userid: 1,
-  fullname: "John",
+  userId: 1,
+  fullName: "John",
   linkedinUrl: "https://www.linkedin.com/in/johndoe/",
   personalWebsite: "https://johndoe.com/",
   bio: "hi im cool",
@@ -62,60 +62,46 @@ export const exampleTags: Tag[] = [
 
 export const dummyPosts: Post[] = [
   {
-    uid: 1,
-    pid: 1,
+    id: 1,
     title: "First Post",
-    content: "This is the first dummy post.",
+    description: "This is the First dummy post.",
+    creatorId: 1,
     createdAt: new Date(),
-    updatedAt: new Date(),
-    tags: [exampleTags[0]],
-    votes: {
-      1: { voteType: "UP" },
-      2: { voteType: "DOWN" },
-      3: { voteType: "UP" },
-    },
+    updatedAt: new Date()
   },
   {
-    uid: 2,
-    pid: 2,
+    id: 3,
     title: "Second Post",
-    content: "This is the second dummy post.",
+    description: "This is the second dummy post.",
+    creatorId: 1,
     createdAt: new Date(),
-    updatedAt: new Date(),
-    tags: [exampleTags[0], exampleTags[1]],
-    votes: {
-      2: { voteType: "UP" },
-    },
+    updatedAt: new Date()
   },
   {
-    uid: 3,
-    pid: 3,
+    id: 3,
     title: "Third Post",
-    content: "This is the third dummy post.",
+    description: "This is the third dummy post.",
+    creatorId: 1,
     createdAt: new Date(),
-    updatedAt: new Date(),
-    tags: [],
-    votes: {},
+    updatedAt: new Date()
   },
 ];
 
 export const dummyComments: PostComment[] = [
   {
-    uid: 1,
-    pid: 1,
-    cid: 1,
+    id: 1,
+    postId: 1,
+    authorId: 1,
     content: "This is a comment on the first post.",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    votes: { 2: { voteType: "UP" } },
+    replyCount: 3,
+    createdAt: new Date()
   },
   {
-    uid: 2,
-    pid: 1,
-    cid: 2,
-    content: "Another comment on the first post.",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    votes: {},
+    id: 2,
+    postId: 2,
+    authorId: 2,
+    content: "This is a comment on the second post.",
+    replyCount: 3,
+    createdAt: new Date()
   },
 ];

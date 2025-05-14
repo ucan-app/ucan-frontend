@@ -19,10 +19,7 @@ const ViewProfile: React.FC<ViewProfileProps> = ({ user }) => {
   
   return (
     <div>
-      <h1>Profile</h1>
-      <p>
-        <strong>Username:</strong> {user.fullname}
-      </p>
+      <h1>Profile</h1> 
       {user.bio && (
         <p>
          <strong>Bio:</strong> {user.bio}
@@ -59,60 +56,6 @@ const ViewProfile: React.FC<ViewProfileProps> = ({ user }) => {
       </button>
     </div>
   );
-  /*
-  return (
-    <div>
-      <h1>Profile</h1>
-      <p>
-        <strong>Username:</strong> {user.fullname}
-      </p>
-      <p>
-        <strong>First Name:</strong> {user.firstName}
-      </p>
-      <p>
-        <strong>Last Name:</strong> {user.lastName}
-      </p>
-      {user.bio && (
-        <p>
-         <strong>Bio:</strong> {user.bio}
-        </p>
-      )}
-      {user.bioEdu && (
-        <p>
-          <strong>Education:</strong> {user.bioEdu}
-        </p>
-      )}
-      {user.bioWork && (
-        <p>
-          <strong>Work:</strong> {user.bioWork}
-        </p>
-      )}
-      {user.linkedin && (
-        <p>
-          <strong>LinkedIn:</strong>{" "}
-          <a href={user.linkedin} target="_blank" rel="noopener noreferrer">
-            {user.linkedin}
-          </a>
-        </p>
-      )}
-      {user.personalWebsite && (
-        <p>
-          <strong>Personal Website:</strong>{" "}
-          <a
-            href={user.personalWebsite}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {user.personalWebsite}
-          </a>
-        </p>
-      )}
-
-      <button onClick={handleEditProfile}>
-        Edit Profile
-      </button>
-    </div>
-  );*/
 };
 
 export default ViewProfile;

@@ -1,6 +1,7 @@
-import React from "react";
-import { Post } from "../types";
+import React, { useEffect, useState } from "react";
+import { Post, User } from "../types";
 import { useNavigate } from "react-router-dom";
+import { getProfile } from "../api/auth"; // Assuming you have this function
 
 interface PostPreviewProps {
   post: Post;
@@ -8,6 +9,24 @@ interface PostPreviewProps {
 
 const PostPreview: React.FC<PostPreviewProps> = ({ post }) => {
   const navigate = useNavigate();
+  const [author, setAuthor] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAuthor = async () => {
+      try {
+        // Fetch the author details
+        const userData = await getProfile(post.creatorId);
+        setAuthor(userData);
+      } catch (error) {
+        console.error("Failed to fetch author details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAuthor();
+  }, [post.creatorId]);
 
   const handleClick = () => {
     navigate(`/post/${post.id}`);
@@ -26,8 +45,9 @@ const PostPreview: React.FC<PostPreviewProps> = ({ post }) => {
       </div>
       <div className="post-right">
         <div className="post-header">
-          <span className="post-author">Name</span>
-          <span className="post-role">badge</span>
+          <span className="post-author">
+            {loading ? "Loading..." : author?.fullName || "Unknown User"}
+          </span>
         </div>
         <div className="post-title">{post.title}</div>
         <div className="post-content">
@@ -35,6 +55,11 @@ const PostPreview: React.FC<PostPreviewProps> = ({ post }) => {
             ? `${post.description.slice(0, 100)}...`
             : post.description}
         </div>
+        {post.createdAt && (
+          <div className="post-date">
+            {new Date(post.createdAt).toLocaleDateString()}
+          </div>
+        )}
       </div>
     </div>
   );

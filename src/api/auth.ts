@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Badge, Post, User } from "../types";
+import { Badge, Page, Post, User } from "../types";
 
 const API_BASE_URL = "http://127.0.0.1:8080";
 
@@ -133,10 +133,10 @@ export const createPost = async (postData: { title: string; description: string;
 export const getAllPosts = async (
   page: number = 0, 
   size: number = 10
-): Promise<Post[]> => {
+): Promise<Page<Post>> => {
   try {
     const response = await axios.get(
-      `${API_BASE_URL}`,
+      "http://127.0.0.1:8080/api/posts",
       { 
         params: { page, size },
         withCredentials: true 
@@ -149,9 +149,9 @@ export const getAllPosts = async (
   }
 };
 
-export const getPost = async (postId: string): Promise<{ post: Post; comments: Comment[] }> => {
+export const getPost = async (postId: number): Promise<Post> => {
   try {
-    const response = await api.get(`/posts/${postId}`);
+    const response = await axios.get(`http://127.0.0.1:8080/api/posts/${postId}`);
     return response.data;
   } catch (error: any) {
     handleApiError(error, "Failed to fetch post");

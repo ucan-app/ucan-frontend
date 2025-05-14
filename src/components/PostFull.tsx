@@ -1,6 +1,7 @@
-import React from "react";
-import { Post, PostComment } from "../types";
+import React, { useEffect, useState } from "react";
+import { Post, PostComment, User } from "../types";
 import Comment from "./Comment";
+import { getProfile } from "../api/auth"; // Assuming you have this function
 
 interface PostFullProps {
   post: Post;
@@ -8,22 +9,47 @@ interface PostFullProps {
 }
 
 const PostFull: React.FC<PostFullProps> = ({ post, comments }) => {
+  const [author, setAuthor] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAuthor = async () => {
+      try {
+        // Fetch the author details
+        const userData = await getProfile(post.creatorId);
+        setAuthor(userData);
+      } catch (error) {
+        console.error("Failed to fetch author details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAuthor();
+  }, [post.creatorId]);
+
   return (
     <div className="post-full">
       <div className="post-full-header">
         <h2 className="post-full-title">{post.title}</h2>
-        
+        <div className="post-full-author">
+          {loading ? "Loading author..." : `Posted by: ${author?.fullName || "Unknown User"}`}
+        </div>
       </div>
       <div className="post-full-content">{post.description}</div>
       <div className="post-full-date">
-        {post.createdAt instanceof Date
-          ? post.createdAt.toLocaleDateString()
-          : new Date(post.createdAt).toLocaleDateString()}
+        {post.createdAt && new Date(post.createdAt).toLocaleDateString()}
       </div>
+      
       <div className="post-full-comments">
-        {comments.map((comment) => (
-          <Comment key={comment.authorId} comment={comment} />
-        ))}
+        <h3>Comments ({comments.length})</h3>
+        {comments.length > 0 ? (
+          comments.map((comment) => (
+            <Comment key={comment.id} comment={comment} />
+          ))
+        ) : (
+          <p>No comments yet.</p>
+        )}
       </div>
     </div>
   );

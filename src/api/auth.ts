@@ -72,7 +72,7 @@ export const getProfile = async (userId: number): Promise<User> => {
 
 export const updateProfile = async (profileData: Partial<User>): Promise<User> => {
   try {
-    const response = await api.put("/profile/", profileData);
+    const response = await api.post("/profile", profileData);
     console.log("Update profile response:", response.data);
     return response.data;
   } catch (error: any) {

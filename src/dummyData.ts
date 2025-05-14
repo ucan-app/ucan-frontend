@@ -24,7 +24,18 @@ export const exampleBadges: Badge[] = [
   },
 ];
 
-export const dummyUser: Userx = {
+export const dummyUser: User = {
+  id: 1,
+  userid: 1,
+  fullname: "John",
+  linkedinUrl: "https://www.linkedin.com/in/johndoe/",
+  personalWebsite: "https://johndoe.com/",
+  bio: "hi im cool",
+  graduationYear: 2024,
+  badges: [],
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString()
+  /*
   uid: 1, // Username
   username: "testuser", // Username
   firstName: "John",
@@ -37,7 +48,7 @@ export const dummyUser: Userx = {
   graduationYear: 2024,
   linkedin: "https://www.linkedin.com/in/johnwick/",
   personalWebsite: "https://en.wikipedia.org/wiki/John_Wick",
-  badges: [],
+  badges: [],*/
 };
 
 // =========================

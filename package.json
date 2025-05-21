@@ -38,6 +38,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "ts-mocha -p tsconfig.json --require ignore-styles src/**/*_test.{ts,tsx}",
+    "test:single": "mocha --require ts-node/register 'src/**/*_test.tsx' -g",
+    "test:describe": "mocha --require ts-node/register 'src/**/*_test.tsx' -g",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

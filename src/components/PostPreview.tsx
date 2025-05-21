@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Post, User } from "../types";
 import { useNavigate } from "react-router-dom";
-import { getProfile } from "../api/auth"; // Assuming you have this function
+import { getProfile } from "../api"; // Assuming you have this function
 
 interface PostPreviewProps {
   post: Post;

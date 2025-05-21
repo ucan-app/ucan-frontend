@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PostFull from "../components/PostFull";
 import { Post, PostComment } from "../types";
-import { getPost } from "../api/auth"; // Import the API function
+import { getPost } from "../api";
 import { dummyComments } from "../dummyData"; // Keep for now until we have comments API
 
 const ViewPost: React.FC = () => {

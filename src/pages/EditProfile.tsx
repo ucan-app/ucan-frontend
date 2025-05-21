@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { User } from "../types";
-import { updateProfile
-
- } from "../api/auth";
+import { updateProfile} from "../api";
 type EditProfileProps = {
   user: User | null;
   onSave: (updatedUser: User) => void;

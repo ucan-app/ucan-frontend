@@ -5,7 +5,7 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import { getProfile, login, logout } from "./api/auth"; // Import API functions
+import { getProfile, login, logout } from "./api"; // Import API functions
 import Layout from "./components/Layout";
 import HomePage from "./pages/HomePage";
 import ViewProfile from "./pages/ViewProfile";

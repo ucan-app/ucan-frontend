@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { User } from "../types";
-import { createPost } from "../api/auth";
+import { createPost } from "../api";
 
 type CreatePostProps = {
   user: User | null;

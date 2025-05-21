@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Post, PostComment, User } from "../types";
 import Comment from "./Comment";
-import { getProfile } from "../api/auth"; // Assuming you have this function
+import { getProfile } from "../api"; // Assuming you have this function
 
 interface PostFullProps {
   post: Post;

@@ -14,8 +14,10 @@
 
 ### Commands
 - **Running frontend:** `npm start` to run the app locally at `localhost:3000`
-- **Building and testing:** `NODE_OPTIONS=--openssl-legacy-provider npm run build` to build the app, running all tests
-- **Testing test:** `npm test` to run tests
+- **Building:** `npm run build` to build the app
+- **Testing all tests:** `npm test` to run all tests
+- **Testing singular test:** `npm run test:single – “test name”` to run a single test with a given name
+- **Testing describe block tests** `npm run test:describe – “describe section name”` to run all tests within a describe block with a given describe section name
 
 ### Processes
 - Version Control: GitHub

@@ -1,25 +1,18 @@
 import axios from "axios";
-import { Badge, Page, Post, User } from "../types";
+import { Page, Post, PostComment, User, UserReply } from "../types";
 
 const API_BASE_URL = "http://127.0.0.1:8080";
 
 // Configure axios defaults
 const api = axios.create({
   baseURL: API_BASE_URL,
-  withCredentials: true, // Important for cookie-based auths
-  /*headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json'
-  }*/
+  withCredentials: true, // for cookie auths
 }); 
 
+// Auth endpoints
 export const register = async (username: string, email: string, password: string): Promise<void> => {
   try {
-    const response = await axios.post(
-      "http://127.0.0.1:8080/api/auth/register",
-      { username, email, password },
-      { withCredentials: true }
-    );
+    const response = await api.post(`/api/auth/register`, { username, email, password });
     console.log("Registration response:", response.data);
   } catch (error: any) {
     handleApiError(error, "Registration failed. Please check your input.");
@@ -28,51 +21,66 @@ export const register = async (username: string, email: string, password: string
 
 export const login = async (username: string, password: string): Promise<number | undefined> => {
   try {
-    // Using application/x-www-form-urlencoded format as expected by Spring Security
-    /*const response = await axios.post(
-      "http://127.0.0.1:8080/api/auth/login",
-      new URLSearchParams({ username, password }),
-      { withCredentials: true }
-    );*/
-    const response = await axios.post(
-      "http://127.0.0.1:8080/api/auth/login",
+    const response = await api.post(
+      `/api/auth/login`,
       { username, password }, // Send as JSON
-      { withCredentials: true }
     );
 
-    // Return user data if the response is successful
     console.log("Login response:", response.data);
     return response.data;
   } catch (error: any) {
     handleApiError(error, "Login failed. Please check your credentials.");
-    return undefined; // Explicitly return undefined in case of an error
+    return undefined;
   }
 };
 
 export const logout = async (): Promise<void> => {
   try {
-    await axios.post("http://127.0.0.1:8080/api/auth/logout", {}, { withCredentials: true });
+    await api.post(`/api/auth/logout`, {});
   } catch (error: any) {
     handleApiError(error, "Logout failed. Please try again.");
+  }
+};
+
+export const addBadge = async (organizationName: string): Promise<void> => {
+  try {
+    await api.post(`/api/auth/badge`, { organizationName });
+    console.log("Badge added successfully");
+  } catch (error: any) {
+    handleApiError(error, "Failed to add badge");
+  }
+};
+
+export const removeBadge = async (organizationName: string): Promise<void> => {
+  try {
+    // For DELETE requests with a body, we need to use the 'data' property
+    await api.delete(`/api/auth/badge`, { 
+      data: { organizationName } 
+    });
+    console.log("Badge removed successfully");
+  } catch (error: any) {
+    handleApiError(error, "Failed to remove badge");
+    throw error;
   }
 };
 
 // Profile endpoints
 export const getProfile = async (userId: number): Promise<User> => {
   try {
-    const response = await axios.get(`http://127.0.0.1:8080/profile/${userId}`, {
-      withCredentials: true,});
-    console.log("Profile response:", response.data);
+    const response = await api.get(`/profile/${userId}`);
+
+    console.log("Get profile response:", response.data);
     return response.data;
   } catch (error: any) {
-    handleApiError(error, "Failed to fetch profile");
+    handleApiError(error, "Failed to get profile");
     throw error;
   }
 };
 
 export const updateProfile = async (profileData: Partial<User>): Promise<User> => {
   try {
-    const response = await api.post("/profile", profileData);
+    const response = await api.post(`/profile`, profileData);
+
     console.log("Update profile response:", response.data);
     return response.data;
   } catch (error: any) {
@@ -81,77 +89,59 @@ export const updateProfile = async (profileData: Partial<User>): Promise<User> =
   }
 };
 
-/*export const createPost = async (postData: { title: string; description: string; creatorId: number }): Promise<Post> => {
-  try {
-    const response = await axios.post("http://127.0.0.1:8080/api/posts", postData, {
-      withCredentials: true,
-    });
-    console.log("Post response", response.data);
-    return response.data;
-  } catch (error: any) {
-    handleApiError(error, "Failed to create post");
-    throw error;
-  }
-};*/
+
+// Post endpoints
+
+// Create URLSearchParams to match the @RequestParam format expected by the backend
+// Sends URL parameter instead of JSON body
 export const createPost = async (postData: { title: string; description: string; creatorId: number }): Promise<Post> => {
   try {
-    // Create URLSearchParams to match the @RequestParam format expected by the backend
     const params = new URLSearchParams();
     params.append('title', postData.title);
     params.append('description', postData.description);
     params.append('creatorId', postData.creatorId.toString());
 
-    const response = await axios.post(
-      "http://127.0.0.1:8080/api/posts", 
-      params, // Send as URL parameters instead of JSON body
+    const response = await api.post(
+      `/api/posts`, 
+      params,
       {
-        withCredentials: true,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded', // Required for @RequestParam
         },
       }
     );
-    console.log("Post response", response.data);
+
+    console.log("Creat post response", response.data);
     return response.data;
   } catch (error: any) {
     handleApiError(error, "Failed to create post");
     throw error;
   }
 };
-
-// Post endpoints
-/*export const getAllPosts = async (params?: { tag?: string; search?: string; badge?: string }): Promise<Post[]> => {
-  try {
-    const response = await api.get("/api/posts", { params });
-    return response.data;
-  } catch (error: any) {
-    handleApiError(error, "Failed to fetch posts");
-    return [];
-  }
-};*/
 
 export const getAllPosts = async (
   page: number = 0, 
   size: number = 10
 ): Promise<Page<Post>> => {
   try {
-    const response = await axios.get(
-      "http://127.0.0.1:8080/api/posts",
+    const response = await api.get(
+      `/api/posts`,
       { 
-        params: { page, size },
-        withCredentials: true 
+        params: { page, size }
       }
     );
+
     return response.data;
   } catch (error: any) {
-    console.error("Failed to fetch posts:", error);
+    console.error("Failed to fetch all posts:", error);
     throw error;
   }
 };
 
 export const getPost = async (postId: number): Promise<Post> => {
   try {
-    const response = await axios.get(`http://127.0.0.1:8080/api/posts/${postId}`);
+    const response = await api.get(`/api/posts/${postId}`);
+
     return response.data;
   } catch (error: any) {
     handleApiError(error, "Failed to fetch post");
@@ -159,43 +149,99 @@ export const getPost = async (postId: number): Promise<Post> => {
   }
 };
 
-export const requestBadgeVerification = async (badgeId: string): Promise<void> => {
+export const getPostByCreator = async (creatorId: number): Promise<Post[]> => {
   try {
-    await api.post(`/badge/${badgeId}`);
-  } catch (error: any) {
-    handleApiError(error, "Failed to request badge verification");
-  }
-};
+    const response = await api.get(`/api/posts/creator/${creatorId}`);
 
-export const verifyBadge = async (badgeId: string, verificationCode: string): Promise<Badge> => {
-  try {
-    const response = await api.post(`/badge/verify/${badgeId}`, { code: verificationCode });
     return response.data;
   } catch (error: any) {
-    handleApiError(error, "Badge verification failed");
+    handleApiError(error, "Failed to fetch post by creator");
     throw error;
   }
 };
 
-export const addComment = async (postId: string, body: string, parent_comment_id?: string): Promise<Comment> => {
+export const deletePost = async (postId: number): Promise<void> => {
   try {
-    const response = await api.post(`/posts/${postId}/comments`, { body, parent_comment_id });
-    return response.data;
+    await api.delete(`/api/posts/${postId}`);
   } catch (error: any) {
-    handleApiError(error, "Failed to add comment");
+    handleApiError(error, "Failed to delete post");
     throw error;
   }
 };
 
-export const votePost = async (postId: string, value: number): Promise<void> => {
+export const updatePost = async (postId: number, title: string, description: string): Promise<Post> => {
   try {
-    await api.post(`/posts/${postId}/vote`, { value });
+    const params = new URLSearchParams();
+    params.append('title', title);
+    params.append('description', description);
+    
+    const response = await api.put(
+      `/api/posts/${postId}`,
+      params,
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }
+    );
+
+    console.log("Update post response:", response.data);
+    return response.data;
   } catch (error: any) {
-    handleApiError(error, "Failed to vote on post");
+    handleApiError(error, "Failed to update post");
+    throw error;
   }
 };
 
+// Comment endpoints
+export const createComment = async (commentData: Partial<PostComment>): Promise<void> => {
+  try {
+    const response = await api.post(`/posts/${commentData.postId}/comments`, {commentData});
 
+    console.log("Create comment response:", response.data);
+    return response.data;
+  } catch (error: any) {
+    handleApiError(error, "Failed to create comment");
+    throw error;
+  }
+};
+
+export const getComments = async (postId: number): Promise<PostComment[]> => {
+  try {
+    const response = await api.get(`/posts/${postId}/comments`);
+
+    console.log("Get comments response:", response.data);
+    return response.data;
+  } catch (error: any) {
+    handleApiError(error, "Failed to get comments");
+    throw error;
+  }
+};
+
+// Reply endpoints
+export const createReply = async (reply: Partial<UserReply>): Promise<void> => {
+  try {
+    const response = await api.post(`/comments/${reply.commentId}/replies`, reply);
+
+    console.log("Create reply response:", response.data);
+    return response.data;
+  } catch (error: any) {
+    handleApiError(error, "Failed to create reply");
+    throw error;
+  }
+};
+
+export const getReplies = async (commentId: number): Promise<UserReply[]> => {
+  try {
+    const response = await api.get(`/comments/${commentId}/replies`);
+
+    console.log("Get replies response:", response.data);
+    return response.data;
+  } catch (error: any) {
+    handleApiError(error, "Failed to get replies");
+    throw error;
+  }
+};
 
 // Helper function to handle API errors consistently
 const handleApiError = (error: any, defaultMessage: string): never => {

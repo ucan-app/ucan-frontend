@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { Post } from "../types";
 import PostPreview from "../components/PostPreview";
 import "../components/PostPreview.css";
-import { getAllPosts } from "../api/auth";
+import { getAllPosts } from "../api";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);

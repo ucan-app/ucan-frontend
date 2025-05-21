@@ -107,6 +107,14 @@ export type PostComment = {
   createdAt: Date;
 };
 
+export type UserReply = {
+  id: number;
+  commentId: number;
+  authorId: number;
+  content: string;
+  creeatedAt: Date;
+}
+
 export type Tag = {
   tid: number;
   name: string;

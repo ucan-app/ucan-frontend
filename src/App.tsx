@@ -80,7 +80,7 @@ function App(): JSX.Element {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/post/:pid" element={<ViewPost />} />
+          <Route path="/post/:pid" element={<ViewPost user={currentUser}/>} />
           <Route path="/create" element={<CreatePost user={currentUser} />} />
           <Route path="/profile" element={<ViewProfile user={currentUser} />} />
           <Route path="/edit" element={<EditProfile user={currentUser} onSave={setCurrentUser} />} />

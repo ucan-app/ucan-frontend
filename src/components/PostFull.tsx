@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Post, PostComment, User } from "../types";
-import Comment from "./Comment";
-import { getProfile } from "../api"; // Assuming you have this function
+import CommentSection from "./CommentSection";
+import { getProfile } from "../api";
 
 interface PostFullProps {
   post: Post;
   comments: PostComment[];
+  onAddComment: (content: string, authorId: number) => void;
+  user: User | null;
 }
 
-const PostFull: React.FC<PostFullProps> = ({ post, comments }) => {
+const PostFull: React.FC<PostFullProps> = ({ post, comments, onAddComment, user }) => {
   const [author, setAuthor] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAuthor = async () => {
       try {
-        // Fetch the author details
         const userData = await getProfile(post.creatorId);
         setAuthor(userData);
       } catch (error) {
@@ -30,27 +31,31 @@ const PostFull: React.FC<PostFullProps> = ({ post, comments }) => {
 
   return (
     <div className="post-full">
+      {/* Post Header */}
       <div className="post-full-header">
         <h2 className="post-full-title">{post.title}</h2>
         <div className="post-full-author">
           {loading ? "Loading author..." : `Posted by: ${author?.fullName || "Unknown User"}`}
         </div>
       </div>
+
+      {/* Post Content */}
       <div className="post-full-content">{post.description}</div>
-      <div className="post-full-date">
-        {post.createdAt && new Date(post.createdAt).toLocaleDateString()}
+      
+      {/* Post Metadata */}
+      <div className="post-full-metadata">
+        <div className="post-full-date">
+          {post.createdAt && new Date(post.createdAt).toLocaleDateString()}
+        </div>
       </div>
       
-      <div className="post-full-comments">
-        <h3>Comments ({comments.length})</h3>
-        {comments.length > 0 ? (
-          comments.map((comment) => (
-            <Comment key={comment.id} comment={comment} />
-          ))
-        ) : (
-          <p>No comments yet.</p>
-        )}
-      </div>
+      {/* Comments Section */}
+      <CommentSection
+        postId={post.id}
+        comments={comments}
+        onAddComment={onAddComment}
+        user={user}
+      />
     </div>
   );
 };

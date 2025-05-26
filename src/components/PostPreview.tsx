@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Post, User } from "../types";
 import { useNavigate } from "react-router-dom";
-import { getProfile } from "../api"; // Assuming you have this function
+import { getProfile } from "../api";
+import "./PostPreview.css";
 
 interface PostPreviewProps {
   post: Post;
@@ -15,7 +16,6 @@ const PostPreview: React.FC<PostPreviewProps> = ({ post }) => {
   useEffect(() => {
     const fetchAuthor = async () => {
       try {
-        // Fetch the author details
         const userData = await getProfile(post.creatorId);
         setAuthor(userData);
       } catch (error) {
@@ -55,11 +55,21 @@ const PostPreview: React.FC<PostPreviewProps> = ({ post }) => {
             ? `${post.description.slice(0, 100)}...`
             : post.description}
         </div>
-        {post.createdAt && (
-          <div className="post-date">
-            {new Date(post.createdAt).toLocaleDateString()}
+        <div className="post-footer">
+          {post.createdAt && (
+            <div className="post-date">
+              {new Date(post.createdAt).toLocaleDateString()}
+            </div>
+          )}
+          <div className="post-votes-display">
+            <span className="vote-count upvote-display">
+              ↑ {post.upvote || 0}
+            </span>
+            <span className="vote-count downvote-display">
+              ↓ {post.downvote || 0}
+            </span>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

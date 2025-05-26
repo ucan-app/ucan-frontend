@@ -3,8 +3,7 @@ import { useParams } from "react-router-dom";
 import PostFull from "../components/PostFull";
 import { Post, PostComment, User } from "../types";
 import { getPost } from "../api";
-//import { dummyComments } from "../dummyData"; // Keep for now until we have comments API
-import { getComments, createComment } from "../api/comment"; // <-- import these
+import { getComments, createComment } from "../api/comment";
 
 interface ViewPostProps {
   user: User | null;
@@ -36,11 +35,6 @@ const ViewPost: React.FC<ViewPostProps> = ({ user }) => {
         const postData: Post = await getPost(postId);
         setPost(postData);
         
-        // For now, use dummy comments or empty array
-        // Later you can implement a getCommentsByPostId API
-        //const postComments = dummyComments.filter(c => c.postId === postId);
-        //setComments(postComments);
-        
         // Fetch comments from backend
         const postComments = await getComments(postId);
         setComments(postComments);
@@ -69,13 +63,24 @@ const ViewPost: React.FC<ViewPostProps> = ({ user }) => {
     }
   };
 
+  // Handler to update post after voting
+  const handlePostUpdate = (updatedPost: Post) => {
+    setPost(updatedPost);
+  };
+
   if (loading) return <div>Loading post...</div>;
   if (error) return <div className="error-message">{error}</div>;
   if (!post) return <div>Post not found.</div>;
 
   return (
     <div>
-      <PostFull post={post} comments={comments} onAddComment={handleAddComment} user={user}/>
+      <PostFull 
+        post={post} 
+        comments={comments} 
+        onAddComment={handleAddComment} 
+        onPostUpdate={handlePostUpdate}
+        user={user}
+      />
     </div>
   );
 };

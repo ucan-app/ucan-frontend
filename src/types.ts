@@ -61,6 +61,8 @@ export type Badge = {
 export type Post = {
   id: number;
   title: string;
+  upvote: number;
+  downvote: number;
   description: string;
   creatorId: number;
   createdAt: Date;

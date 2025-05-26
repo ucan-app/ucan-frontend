@@ -58,7 +58,38 @@
   font-size: 0.9rem;
   color: #595959;
   line-height: 1.4;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap; /* Ensure content stays on one line */
+  margin-bottom: 0.5rem; /* Add margin for spacing */
+}
+
+/* Post date */
+.post-date {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+/* NEW: Post footer with date and vote counts */
+.post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.post-votes-display {
+  display: flex;
+  gap: 1rem;
+}
+
+.vote-count {
+  font-size: 0.9em;
+  color: #666;
+  font-weight: 500;
+}
+
+.upvote-display {
+  color: #28a745;
+}
+
+.downvote-display {
+  color: #dc3545;
 }

@@ -59,7 +59,7 @@ export const exampleTags: Tag[] = [
   { tid: 1, name: "General" },
   { tid: 2, name: "Off-Topic" },
 ];
-
+/*
 export const dummyPosts: Post[] = [
   {
     id: 1,
@@ -105,3 +105,4 @@ export const dummyComments: PostComment[] = [
     createdAt: new Date()
   },
 ];
+*/

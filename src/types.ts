@@ -114,7 +114,7 @@ export type UserReply = {
   commentId: number;
   authorId: number;
   content: string;
-  creeatedAt: Date;
+  createdAt: Date;
 }
 
 export type Tag = {

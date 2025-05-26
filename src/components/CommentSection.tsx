@@ -55,7 +55,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
       <div className="comments-list">
         {comments.length > 0 ? (
           comments.map((comment) => (
-            <Comment key={comment.id} comment={comment} />
+            <Comment key={comment.id} comment={comment} user={user} />
           ))
         ) : (
           <p className="no-comments">No comments yet. Be the first to comment!</p>

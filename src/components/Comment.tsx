@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { PostComment, User, UserReply } from "../types";
 import { getProfile } from "../api";
 import { getReplies, createReply } from "../api/reply";
+import { useNavigate } from "react-router-dom";
 import Reply from "./Reply";
 import "./Comment.css";
 
@@ -19,6 +20,7 @@ const Comment: React.FC<CommentProps> = ({ comment, user }) => {
   const [submittingReply, setSubmittingReply] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [loadingReplies, setLoadingReplies] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAuthor = async () => {
@@ -48,6 +50,12 @@ const Comment: React.FC<CommentProps> = ({ comment, user }) => {
     fetchReplies();
   }, [comment.authorId, comment.id]);
 
+  const handleAuthorClick = () => {
+    if (author) {
+      navigate(`/profile/${author.userId}`);
+    }
+  };
+
   const handleReplyClick = () => {
     if (!user) {
       setShowLoginPrompt(true);
@@ -69,7 +77,6 @@ const Comment: React.FC<CommentProps> = ({ comment, user }) => {
         content: replyContent.trim()
       });
       
-      // Refresh replies
       const updatedReplies = await getReplies(comment.id);
       setReplies(updatedReplies);
       setReplyContent("");
@@ -85,11 +92,15 @@ const Comment: React.FC<CommentProps> = ({ comment, user }) => {
     <div className="comment">
       <div className="comment-header">
         <span className="comment-author">
-          {loading ? "Loading..." : (
-            <>
-              <span className="author-fullname">{author?.fullName || "Anonymous"}</span>
-            </>
-          )}
+          {
+            <span 
+              className="author-fullname clickable-author"
+              onClick={handleAuthorClick}
+              title="View profile"
+            >
+              {author?.fullName || "Anonymous"}
+            </span>
+          }
         </span>
         <span className="comment-date">
           {comment.createdAt && new Date(comment.createdAt).toLocaleDateString()}
@@ -105,8 +116,13 @@ const Comment: React.FC<CommentProps> = ({ comment, user }) => {
           onClick={handleReplyClick}
           disabled={submittingReply}
         >
-          Reply ({replies.length})
+          Reply
         </button>
+        {replies.length > 0 && (
+          <span className="reply-count">
+            {replies.length} {replies.length === 1 ? 'reply' : 'replies'}
+          </span>
+        )}
       </div>
 
       {showLoginPrompt && (
@@ -144,7 +160,6 @@ const Comment: React.FC<CommentProps> = ({ comment, user }) => {
         </form>
       )}
 
-      {/* Replies Section */}
       {loadingReplies ? (
         <div className="loading-replies">Loading replies...</div>
       ) : (
@@ -156,7 +171,6 @@ const Comment: React.FC<CommentProps> = ({ comment, user }) => {
           </div>
         )
       )}
-      {/* Future: Add reply, edit, delete buttons here */}
     </div>
   );
 };

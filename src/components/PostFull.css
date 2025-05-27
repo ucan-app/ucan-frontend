@@ -22,6 +22,7 @@
 .post-full-author {
   font-size: 1rem;
   color: #666;
+  cursor: pointer;
 }
 
 .post-full-content {

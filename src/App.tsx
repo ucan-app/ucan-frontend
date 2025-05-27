@@ -83,6 +83,7 @@ function App(): JSX.Element {
           <Route path="/post/:pid" element={<ViewPost user={currentUser}/>} />
           <Route path="/create" element={<CreatePost user={currentUser} />} />
           <Route path="/profile" element={<ViewProfile user={currentUser} />} />
+          <Route path="/profile/:userId" element={<ViewProfile user={currentUser} />} />
           <Route path="/edit" element={<EditProfile user={currentUser} onSave={setCurrentUser} />} />
           {/* Redirect to home if no match */}
           <Route path="*" element={<Navigate to="/" />} />

@@ -50,17 +50,27 @@
 }
 
 .reply-button {
-  background: none;
-  border: none;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
   color: #666;
   cursor: pointer;
   font-size: 0.9em;
-  padding: 0.25rem 0;
 }
 
 .reply-button:hover {
-  color: #333;
-  text-decoration: underline;
+  background-color: #e9ecef; /* Light gray background */
+  color: #333; /* Slightly darker text */
+}
+
+.reply-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.reply-button:disabled:hover {
+  background-color: transparent; /* No hover effect when disabled */
 }
 
 .reply-form {
@@ -132,4 +142,18 @@
   color: #dc3545;
   font-size: 0.9em;
   margin-top: 0.5rem;
+}
+
+.comment-actions {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.reply-count {
+  font-size: 0.9em;
+  color: #666;
+  font-style: italic;
 }

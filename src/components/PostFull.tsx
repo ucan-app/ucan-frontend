@@ -3,6 +3,7 @@ import { Post, PostComment, User } from "../types";
 import CommentSection from "./CommentSection";
 import { getProfile } from "../api";
 import { upvotePost, downvotePost, getPost } from "../api/post";
+import { useNavigate } from "react-router-dom";
 import "./PostFull.css";
 
 interface PostFullProps {
@@ -18,6 +19,7 @@ const PostFull: React.FC<PostFullProps> = ({ post, comments, onAddComment, onPos
   const [loading, setLoading] = useState(true);
   const [voting, setVoting] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAuthor = async () => {
@@ -33,6 +35,12 @@ const PostFull: React.FC<PostFullProps> = ({ post, comments, onAddComment, onPos
 
     fetchAuthor();
   }, [post.creatorId]);
+
+  const handleAuthorClick = () => {
+    if (author) {
+      navigate(`/profile/${author.userId}`);
+    }
+  };
 
   const handleUpvote = async () => {
     if (!user) {
@@ -80,7 +88,13 @@ const PostFull: React.FC<PostFullProps> = ({ post, comments, onAddComment, onPos
       <div className="post-full-header">
         <h2 className="post-full-title">{post.title}</h2>
         <div className="post-full-author">
-          {loading ? "Loading author..." : `Posted by: ${author?.fullName || "Unknown User"}`}
+          {<span 
+              className="clickable-author"
+              onClick={handleAuthorClick}
+              title="View profile"
+            >
+              {author?.fullName || "Unknown User"}
+            </span>}
         </div>
       </div>
 

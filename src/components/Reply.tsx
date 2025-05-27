@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { UserReply, User } from "../types";
 import { getProfile } from "../api";
+import { useNavigate } from "react-router-dom";
 import "./Reply.css";
 
 interface ReplyProps {
@@ -10,6 +11,7 @@ interface ReplyProps {
 const Reply: React.FC<ReplyProps> = ({ reply }) => {
   const [author, setAuthor] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAuthor = async () => {
@@ -26,14 +28,24 @@ const Reply: React.FC<ReplyProps> = ({ reply }) => {
     fetchAuthor();
   }, [reply.authorId]);
 
+  const handleAuthorClick = () => {
+    if (author) {
+      navigate(`/profile/${author.userId}`);
+    }
+  };
+
   return (
     <div className="reply">
       <div className="reply-header">
         <span className="reply-author">
           {loading ? "Loading..." : (
-            <>
-              <span className="author-fullname">{author?.fullName || "Anonymous"}</span>
-            </>
+            <span 
+              className="author-fullname clickable-author"
+              onClick={handleAuthorClick}
+              title="View profile"
+            >
+              {author?.fullName || "Anonymous"}
+            </span>
           )}
         </span>
         <span className="reply-date">

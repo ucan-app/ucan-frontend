@@ -92,7 +92,7 @@ const Comment: React.FC<CommentProps> = ({ comment, user }) => {
     <div className="comment">
       <div className="comment-header">
         <span className="comment-author">
-          {loading ? "Loading..." : (
+          {
             <span 
               className="author-fullname clickable-author"
               onClick={handleAuthorClick}
@@ -100,7 +100,7 @@ const Comment: React.FC<CommentProps> = ({ comment, user }) => {
             >
               {author?.fullName || "Anonymous"}
             </span>
-          )}
+          }
         </span>
         <span className="comment-date">
           {comment.createdAt && new Date(comment.createdAt).toLocaleDateString()}
@@ -116,8 +116,13 @@ const Comment: React.FC<CommentProps> = ({ comment, user }) => {
           onClick={handleReplyClick}
           disabled={submittingReply}
         >
-          Reply ({replies.length})
+          Reply
         </button>
+        {replies.length > 0 && (
+          <span className="reply-count">
+            {replies.length} {replies.length === 1 ? 'reply' : 'replies'}
+          </span>
+        )}
       </div>
 
       {showLoginPrompt && (

@@ -1,10 +1,11 @@
-import { User, Badge, Post, PostComment, Tag, Userx } from "./types";
+import { User, Badge, Post, PostComment, Tag } from "./types";
 
 // =========================
 // User-related dummy data
 // =========================
 
 export const exampleBadges: Badge[] = [
+  /*
   {
     bid: "1",
     type: "UW",
@@ -48,7 +49,7 @@ export const dummyUser: User = {
   graduationYear: 2024,
   linkedin: "https://www.linkedin.com/in/johnwick/",
   personalWebsite: "https://en.wikipedia.org/wiki/John_Wick",
-  badges: [],*/
+  badges: [],
 };
 
 // =========================
@@ -59,7 +60,7 @@ export const exampleTags: Tag[] = [
   { tid: 1, name: "General" },
   { tid: 2, name: "Off-Topic" },
 ];
-/*
+
 export const dummyPosts: Post[] = [
   {
     id: 1,
@@ -104,5 +105,5 @@ export const dummyComments: PostComment[] = [
     replyCount: 3,
     createdAt: new Date()
   },
+  */
 ];
-*/

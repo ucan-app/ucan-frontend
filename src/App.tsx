@@ -15,7 +15,6 @@ import ViewPost from "./pages/ViewPost";
 import EditProfile from "./pages/EditProfile";
 import CreatePost from "./pages/CreatePost";
 import { User } from "./types";
-import { dummyUser } from "./dummyData";
 
 function App(): JSX.Element {
   const [currentUser, setCurrentUser] = useState<User | null>(null);

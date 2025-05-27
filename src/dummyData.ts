@@ -1,11 +1,11 @@
-import { User, Badge, Post, PostComment, Tag } from "./types";
+import { User, Post, PostComment, Tag } from "./types";
 
 // =========================
 // User-related dummy data
 // =========================
 
-export const exampleBadges: Badge[] = [
-  /*
+/*export const exampleBadges: Badge[] = [
+  
   {
     bid: "1",
     type: "UW",
@@ -25,7 +25,9 @@ export const exampleBadges: Badge[] = [
   },
 ];
 
+
 export const dummyUser: User = {
+  
   id: 1,
   userId: 1,
   fullName: "John",
@@ -87,9 +89,10 @@ export const dummyPosts: Post[] = [
     updatedAt: new Date()
   },
 ];
+*/
 
 export const dummyComments: PostComment[] = [
-  {
+  /*{
     id: 1,
     postId: 1,
     authorId: 1,

@@ -6,6 +6,8 @@
 - Run `npm start`
 - Go to `localhost:3000`
 
+Please refer to the [frontend developer guidelines](https://github.com/ucan-app/ucan-frontend/blob/main/frontend-developer-guidelines.md) for more details.
+
 ### Technology Needed
 - Your favorite code editor, [VSCode](https://code.visualstudio.com/download) is recommended.
 - Node.js (version 18.x or higher)

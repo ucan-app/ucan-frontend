@@ -103,10 +103,13 @@ export const updatePost = async (postId: number, title: string, description: str
 
 // Add these functions to your existing api/post.ts file
 
-export const upvotePost = async (postId: number): Promise<void> => {
+export const upvotePost = async (postId: number, userId: number): Promise<void> => {
   try {
     console.log("Calling upvote API for post:", postId);
-    await api.patch(`/api/posts/${postId}/upvote`);
+    //await api.patch(`/api/posts/${postId}/upvote`);
+    await api.patch(`/api/posts/${postId}/upvote`, null, {
+      params: { userId: userId }
+    });
     console.log("Upvote API call successful");
   } catch (error: any) {
     console.error("Upvote API error:", error);
@@ -115,9 +118,11 @@ export const upvotePost = async (postId: number): Promise<void> => {
   }
 };
 
-export const downvotePost = async (postId: number): Promise<void> => {
+export const downvotePost = async (postId: number, userId: number): Promise<void> => {
   try {
-    await api.patch(`/api/posts/${postId}/downvote`);
+    await api.patch(`/api/posts/${postId}/downvote`, null, {
+      params: {userId: userId}
+    });
   } catch (error: any) {
     handleApiError(error, "Failed to downvote post");
     throw error;

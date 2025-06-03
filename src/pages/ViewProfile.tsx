@@ -27,6 +27,7 @@ const ViewProfile: React.FC<ViewProfileProps> = ({ user: currentUser }) => {
             throw new Error("Invalid User ID");
           }
           
+          // Use existing getProfile API with userId
           const userData = await getProfile(userIdNum);
           setProfileUser(userData);
         } catch (err: any) {
@@ -105,6 +106,26 @@ const ViewProfile: React.FC<ViewProfileProps> = ({ user: currentUser }) => {
               {profileUser.personalWebsite}
             </a>
           </p>
+        )}
+        
+        {/* Badges Section */}
+        {profileUser.badges && profileUser.badges.length > 0 && (
+          <div className="profile-badges">
+            <p><strong>Badges:</strong></p>
+            <div className="badges-container">
+              {profileUser.badges.map((badge, index) => (
+                <div 
+                  key={`${badge.organizationName}-${index}`}
+                  className={`profile-badge ${badge.validated ? 'validated' : 'unvalidated'}`}
+                >
+                  <span className="badge-name">{badge.organizationName}</span>
+                  <span className={`validation-status ${badge.validated ? 'validated' : 'unvalidated'}`}>
+                    {badge.validated ? '✓ Verified' : '⚠ Unverified'}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </div>
 

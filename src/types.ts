@@ -1,37 +1,6 @@
-export type PageName =
-  | "Home"
-  | "ViewProf"
-  | "EditProf"
-  | "ViewPost"
-  | "CreatePost"
-  | "Login"
-  | "SignUp"
-  | "AddBadge"
-  | "Verify";
-
 // =========================
 // User-related Types
 // =========================
-
-export type Userx = {
-  // Identification
-  uid: number;
-  username: string;
-  firstName: string;
-  lastName: string;
-  profilePicture: string; // Base64 string
-  pid: number; // Profile ID
-  // Bio
-  bio: string;
-  bioEdu: string;
-  bioWork: string;
-  graduationYear: number;
-  // Links
-  linkedin: string;
-  personalWebsite: string;
-  badges: Badge[];
-  // Password will not be stored in browser
-};
 
 export type User = {
   // Identification
@@ -48,11 +17,9 @@ export type User = {
 };
 
 export type Badge = {
-  bid: string;
-  type: "UW" | "COMPANY";
-  companyName?: string;
-  domain: string;
-};
+  organizationName: string;
+  validated: boolean;
+}
 
 // =========================
 // Post-related Types

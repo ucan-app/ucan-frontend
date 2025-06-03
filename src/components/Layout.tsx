@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { User } from "../types";
 import "./Layout.css";
@@ -17,11 +17,35 @@ const Layout: React.FC<LayoutProps> = ({
   children,
 }) => {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleLogoutAndRedirect = () => {
     handleLogout();
     navigate("/");
   };
+
+  // Real-time search effect
+  useEffect(() => {
+    const searchResults = document.querySelectorAll('.post-preview');
+    const query = searchQuery.toLowerCase().trim();
+    
+    searchResults.forEach((post) => {
+      // Get all searchable content
+      const title = post.querySelector('.post-title')?.textContent?.toLowerCase() || '';
+      const content = post.querySelector('.post-content')?.textContent?.toLowerCase() || '';
+      const author = post.querySelector('.post-author')?.textContent?.toLowerCase() || '';
+      
+      // Show post if query is empty or if any of the content matches
+      if (query === '' || 
+          title.includes(query) || 
+          content.includes(query) || 
+          author.includes(query)) {
+        (post as HTMLElement).style.display = 'block';
+      } else {
+        (post as HTMLElement).style.display = 'none';
+      }
+    });
+  }, [searchQuery]); // Re-run effect whenever searchQuery changes
 
   return (
     <div className="app-container">
@@ -30,6 +54,16 @@ const Layout: React.FC<LayoutProps> = ({
           <a href="/" className="logo">
             UCAN
           </a>
+          <div className="search-form">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search posts, content, or users..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <span className="search-button">🔍</span>
+          </div>
           <div className="user-menu">
             <button className="user-icon">
               <img

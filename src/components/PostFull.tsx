@@ -69,7 +69,7 @@ const PostFull: React.FC<PostFullProps> = ({
     
     setVoting(true);
     try {
-      await upvotePost(post.id);
+      await upvotePost(post.id, user.userId);
       const updatedPost = await getPost(post.id);
       onPostUpdate(updatedPost);
       setShowLoginPrompt(false);
@@ -88,7 +88,7 @@ const PostFull: React.FC<PostFullProps> = ({
     
     setVoting(true);
     try {
-      await downvotePost(post.id);
+      await downvotePost(post.id, user.userId);
       const updatedPost = await getPost(post.id);
       onPostUpdate(updatedPost);
       setShowLoginPrompt(false);

@@ -15,7 +15,6 @@ import ViewPost from "./pages/ViewPost";
 import EditProfile from "./pages/EditProfile";
 import CreatePost from "./pages/CreatePost";
 import { User } from "./types";
-import { dummyUser } from "./dummyData";
 
 function App(): JSX.Element {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -69,6 +68,26 @@ function App(): JSX.Element {
     }
   };
 
+  const handleProfileUpdate = async (updatedUser: User) => {
+    try {
+      // Fetch the latest user data to ensure we have the most current information
+      const latestUserData = await getProfile(updatedUser.userId);
+      
+      // Update the app state with the latest data
+      setCurrentUser(latestUserData);
+      
+      // Update localStorage with the latest data
+      localStorage.setItem("currentUser", JSON.stringify(latestUserData));
+      
+      console.log("Profile updated in app state:", latestUserData);
+    } catch (error) {
+      console.error("Failed to refresh user data after profile update:", error);
+      // Fallback to the provided user data if API call fails
+      setCurrentUser(updatedUser);
+      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+    }
+  };
+
   return (
     <Router>
       <Layout
@@ -84,7 +103,7 @@ function App(): JSX.Element {
           <Route path="/create" element={<CreatePost user={currentUser} />} />
           <Route path="/profile" element={<ViewProfile user={currentUser} />} />
           <Route path="/profile/:userId" element={<ViewProfile user={currentUser} />} />
-          <Route path="/edit" element={<EditProfile user={currentUser} onSave={setCurrentUser} />} />
+          <Route path="/edit" element={<EditProfile user={currentUser} onSave={handleProfileUpdate} />} />
           {/* Redirect to home if no match */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

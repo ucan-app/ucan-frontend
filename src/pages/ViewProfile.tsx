@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { User } from "../types";
+import { User, Post } from "../types";
 import { getProfile } from "../api";
+import { getPostByCreator } from "../api/post";
+import "./ViewProfile.css";
 
 type ViewProfileProps = {
   user: User | null; // The currently logged-in user
@@ -11,7 +13,9 @@ const ViewProfile: React.FC<ViewProfileProps> = ({ user: currentUser }) => {
   const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
   const [profileUser, setProfileUser] = useState<User | null>(null);
+  const [userPosts, setUserPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingPosts, setLoadingPosts] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -45,8 +49,43 @@ const ViewProfile: React.FC<ViewProfileProps> = ({ user: currentUser }) => {
     fetchUserProfile();
   }, [userId, currentUser]);
 
+  useEffect(() => {
+    const fetchUserPosts = async () => {
+      if (!profileUser) return;
+
+      try {
+        setLoadingPosts(true);
+        console.log("Fetching posts for user:", profileUser.userId);
+        const posts = await getPostByCreator(profileUser.userId);
+        console.log("Fetched user posts:", posts);
+        setUserPosts(posts);
+      } catch (err: any) {
+        console.error("Failed to fetch user posts:", err);
+        // Don't set error for posts - just log it and show empty state
+        setUserPosts([]);
+      } finally {
+        setLoadingPosts(false);
+      }
+    };
+
+    fetchUserPosts();
+  }, [profileUser]);
+
   const handleEditProfile = () => {
     navigate("/edit");
+  };
+
+  const handlePostClick = (postId: number) => {
+    navigate(`/post/${postId}`);
+  };
+
+  const formatDate = (dateString: Date | string) => {
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString();
+    } catch {
+      return "Unknown date";
+    }
   };
 
   // Handle loading state when fetching a specific user
@@ -125,6 +164,63 @@ const ViewProfile: React.FC<ViewProfileProps> = ({ user: currentUser }) => {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+      </div>
+
+      {/* User Posts Section */}
+      <div className="profile-posts">
+        <h2>
+          {isOwnProfile ? 'My Posts' : `${profileUser.fullName}'s Posts`} 
+          ({userPosts.length})
+        </h2>
+        
+        {loadingPosts ? (
+          <div className="loading-posts">Loading posts...</div>
+        ) : userPosts.length > 0 ? (
+          <div className="posts-list">
+            {userPosts.map((post) => (
+              <div 
+                key={post.id} 
+                className="post-card"
+                onClick={() => handlePostClick(post.id)}
+                style={{ cursor: 'pointer' }}
+              >
+                <div className="post-card-header">
+                  <h3 className="post-card-title">{post.title}</h3>
+                  <div className="post-card-metadata">
+                    <span className="post-date">{formatDate(post.createdAt)}</span>
+                    <div className="post-votes">
+                      <span className="upvotes">↑ {post.upvote || 0}</span>
+                      <span className="downvotes">↓ {post.downvote || 0}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="post-card-description">
+                  {post.description.length > 150 
+                    ? `${post.description.substring(0, 150)}...` 
+                    : post.description
+                  }
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="no-posts">
+            {isOwnProfile 
+              ? "You haven't created any posts yet." 
+              : `${profileUser.fullName} hasn't created any posts yet.`
+            }
+            {isOwnProfile && (
+              <div className="create-post-prompt">
+                <button 
+                  onClick={() => navigate('/create')}
+                  className="create-post-btn"
+                >
+                  Create Your First Post
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

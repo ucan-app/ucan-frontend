@@ -1,0 +1,136 @@
+/* Add this to your ViewProfile.css file */
+
+.profile-posts {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.profile-posts h2 {
+  margin-bottom: 1rem;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.loading-posts {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-style: italic;
+}
+
+.posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.post-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: #fff;
+  transition: box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+.post-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.post-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.post-card-title {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+  font-weight: 600;
+  flex: 1;
+  margin-right: 1rem;
+}
+
+.post-card-metadata {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.post-date {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.post-votes {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.upvotes {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.downvotes {
+  color: #dc3545;
+  font-weight: 500;
+}
+
+.post-card-description {
+  color: #555;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.no-posts {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #666;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px dashed #ddd;
+}
+
+.create-post-prompt {
+  margin-top: 1rem;
+}
+
+.create-post-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.create-post-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .post-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .post-card-metadata {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+  
+  .post-card-title {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+}

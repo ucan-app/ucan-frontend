@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import PostFull from "../components/PostFull";
 import { Post, PostComment, User } from "../types";
 import { getPost } from "../api";
@@ -11,6 +11,7 @@ interface ViewPostProps {
 
 const ViewPost: React.FC<ViewPostProps> = ({ user }) => {
   const { pid } = useParams<{ pid: string }>();
+  const navigate = useNavigate();
   const [post, setPost] = useState<Post | null>(null);
   const [comments, setComments] = useState<PostComment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -63,9 +64,19 @@ const ViewPost: React.FC<ViewPostProps> = ({ user }) => {
     }
   };
 
-  // Handler to update post after voting
+  // Handler to update post after voting or editing
   const handlePostUpdate = (updatedPost: Post) => {
     setPost(updatedPost);
+  };
+
+  // Handler for post deletion
+  const handlePostDelete = () => {
+    // Navigate to home page after successful deletion
+    navigate("/", { 
+      state: { 
+        message: "Post deleted successfully" 
+      }
+    });
   };
 
   if (loading) return <div>Loading post...</div>;
@@ -79,6 +90,7 @@ const ViewPost: React.FC<ViewPostProps> = ({ user }) => {
         comments={comments} 
         onAddComment={handleAddComment} 
         onPostUpdate={handlePostUpdate}
+        onPostDelete={handlePostDelete}
         user={user}
       />
     </div>

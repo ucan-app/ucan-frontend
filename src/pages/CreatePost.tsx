@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { User } from "../types";
 import { createPost } from "../api";
+import "./CreatePost.css";
 
 type CreatePostProps = {
   user: User | null;
@@ -11,6 +12,7 @@ const CreatePost: React.FC<CreatePostProps> = ({ user }) => {
   const [description, setDescription] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const handlePost = async () => {
     if (!user) {
@@ -22,62 +24,78 @@ const CreatePost: React.FC<CreatePostProps> = ({ user }) => {
       setError("Both title and description are required.");
       return;
     }
-/*
-  if (user.userid === undefined || user.userid === null) {
-    setError("User ID is missing. Please log in again.");
-    return;
-  }*/
+
+    setIsSubmitting(true);
+    setError(null);
+    setSuccess(null);
 
     try {
       await createPost({
         title,
         description,
-        creatorId: user.userId, // Pass the creatorId from the user prop
+        creatorId: user.userId,
       });
       setSuccess("Post created successfully!");
-      setTitle(""); // Clear the form
+      setTitle("");
       setDescription("");
-      setError(null);
     } catch (err: any) {
       setError(err.message || "Failed to create post.");
-      setSuccess(null);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  if (!user) {
+    return (
+      <div className="create-post-container">
+        <div className="login-prompt">
+          <h2>Please log in to create a post</h2>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <h1>Create Post</h1>
-      {user ? (
-        <p>
-          Posting as: {user.fullName}
-        </p>
-      ) : (
-        <p>Please log in to create a post</p>
-      )}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>{success}</p>}
-      <div>
-        <label>
-          <strong>Title:</strong>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Enter post title"
-          />
-        </label>
+    <div className="create-post-container">
+      <h1 className="create-post-header">Create Post</h1>
+      
+      <div className="user-info">
+        {user.fullName}
       </div>
-      <div>
-        <label>
-          <strong>Description:</strong>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter post description"
-          />
-        </label>
+
+      {error && <div className="error-message">{error}</div>}
+      {success && <div className="success-message">{success}</div>}
+
+      <div className="form-group">
+        <label htmlFor="title">Title</label>
+        <input
+          id="title"
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Enter post title"
+          disabled={isSubmitting}
+        />
       </div>
-      <button onClick={handlePost}>Post</button>
+
+      <div className="form-group">
+        <label htmlFor="description">Description</label>
+        <textarea
+          id="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Enter post description"
+          disabled={isSubmitting}
+        />
+      </div>
+
+      <button 
+        className="submit-button"
+        onClick={handlePost}
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? "Creating..." : "Create Post"}
+      </button>
     </div>
   );
 };

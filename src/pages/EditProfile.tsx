@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Badge, User } from "../types";
 import { updateProfile, addBadge, removeBadge, getProfile } from "../api";
@@ -15,22 +15,60 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onSave }) => {
 
   const initialUser: User | null = user || (location.state && location.state.user);
 
-  const [bio, setBio] = useState(initialUser?.bio || "");
-  const [graduationYear, setGraduationYear] = useState(initialUser?.graduationYear || "");
-  const [linkedinUrl, setLinkedin] = useState(initialUser?.linkedinUrl || "");
-  const [personalWebsite, setPersonalWebsite] = useState(initialUser?.personalWebsite || "");
-
-  // Badge management - now properly as string[]
-  const [badges, setBadges] = useState<Badge[]>(initialUser?.badges || []);
+  const [bio, setBio] = useState("");
+  const [graduationYear, setGraduationYear] = useState("");
+  const [linkedinUrl, setLinkedin] = useState("");
+  const [personalWebsite, setPersonalWebsite] = useState("");
+  const [badges, setBadges] = useState<Badge[]>([]);
   const [newBadgeEmail, setNewBadgeEmail] = useState("");
   const [addingBadge, setAddingBadge] = useState(false);
   const [removingBadges, setRemovingBadges] = useState<Set<string>>(new Set());
+  const [loading, setLoading] = useState(true);
+
+  // Initialize form data when user data is available
+  useEffect(() => {
+    const initializeForm = async () => {
+      if (!initialUser) return;
+      
+      try {
+        setLoading(true);
+        // Fetch the latest user data to ensure we have current badges
+        const latestUserData = await getProfile(initialUser.userId);
+        
+        // Initialize all form fields with latest data
+        setBio(latestUserData.bio || "");
+        setGraduationYear(latestUserData.graduationYear?.toString() || "");
+        setLinkedin(latestUserData.linkedinUrl || "");
+        setPersonalWebsite(latestUserData.personalWebsite || "");
+        setBadges(latestUserData.badges || []);
+        
+        console.log("Form initialized with latest user data:", latestUserData);
+        console.log("Initial badges:", latestUserData.badges);
+      } catch (error) {
+        console.error("Failed to fetch latest user data:", error);
+        // Fallback to props data if API call fails
+        setBio(initialUser.bio || "");
+        setGraduationYear(initialUser.graduationYear?.toString() || "");
+        setLinkedin(initialUser.linkedinUrl || "");
+        setPersonalWebsite(initialUser.personalWebsite || "");
+        setBadges(initialUser.badges || []);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initializeForm();
+  }, [initialUser]);
 
   if (!initialUser) {
     return <p>No user data available.</p>;
   }
 
-   // Email validation function
+  if (loading) {
+    return <p>Loading profile data...</p>;
+  }
+
+  // Email validation function
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -38,7 +76,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onSave }) => {
 
   const handleAddBadge = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newBadgeEmail.trim()) return; // trim removes whitespace
+    if (!newBadgeEmail.trim()) return;
 
     // Validate email format
     if (!validateEmail(newBadgeEmail.trim())) {
@@ -48,15 +86,26 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onSave }) => {
 
     setAddingBadge(true);
     try {
-      //const organizationName = newBadgeOrg.trim().toUpperCase();
+      console.log("Adding badge with email:", newBadgeEmail.trim());
+      
       await addBadge(newBadgeEmail.trim());
       
-      // Refresh user profile to get updated badges
+      // Refresh user profile to get updated badges AND update all form state
+      console.log("Fetching updated profile for userId:", initialUser.userId);
       const updatedUserData = await getProfile(initialUser.userId);
+      console.log("Updated user data:", updatedUserData);
+      console.log("Updated badges:", updatedUserData.badges);
+      
+      // Update ALL form state with fresh data from the server
       setBadges(updatedUserData.badges || []);
+      setBio(updatedUserData.bio || "");
+      setGraduationYear(updatedUserData.graduationYear?.toString() || "");
+      setLinkedin(updatedUserData.linkedinUrl || "");
+      setPersonalWebsite(updatedUserData.personalWebsite || "");
       
       setNewBadgeEmail("");
-      console.log("Badge added successfully");
+      
+      console.log("Badge added and form state refreshed successfully");
     } catch (error) {
       console.error("Failed to add badge:", error);
       alert("Failed to add badge. Please make sure you're using a valid organizational email address.");
@@ -66,16 +115,25 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onSave }) => {
   };
 
   const handleRemoveBadge = async (organizationName: string) => {
+    console.log("Attempting to remove badge:", organizationName);
+    
     setRemovingBadges(prev => new Set(prev).add(organizationName));
-    const orgNameUpper = organizationName.toUpperCase();
-    console.log("Removing badge:", orgNameUpper);
+    
     try {
       await removeBadge(organizationName);
       
-      // Remove badge from local state
-      setBadges(prev => prev.filter(badge => badge.organizationName !== organizationName));
+      // Refresh the entire profile to ensure consistency
+      const updatedUserData = await getProfile(initialUser.userId);
+      console.log("Profile refreshed after badge removal:", updatedUserData);
       
-      console.log("Badge removed successfully");
+      // Update ALL form state with fresh data from the server
+      setBadges(updatedUserData.badges || []);
+      setBio(updatedUserData.bio || "");
+      setGraduationYear(updatedUserData.graduationYear?.toString() || "");
+      setLinkedin(updatedUserData.linkedinUrl || "");
+      setPersonalWebsite(updatedUserData.personalWebsite || "");
+      
+      console.log("Badge removed and form state refreshed successfully");
     } catch (error) {
       console.error("Failed to remove badge:", error);
       alert("Failed to remove badge. Please try again.");
@@ -89,28 +147,36 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onSave }) => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const updatedUser: User = {
-      ...initialUser,
-      id: initialUser.id,
-      userId: initialUser.userId,
-      fullName: initialUser.fullName,
-      linkedinUrl,
-      personalWebsite,
-      bio,
-      graduationYear: parseInt(graduationYear as string, 10),
-      //badges: initialUser.badges 
-    };
-    
-    try {
-      const savedUser = await updateProfile(updatedUser);
-      onSave(savedUser);
-      localStorage.setItem("currentUser", JSON.stringify(savedUser));
-      navigate(-1);
-    } catch (err) {
-      alert("Failed to update profile: " + (err as Error).message);
-    }
+  e.preventDefault();
+  
+  // Send only the fields that UserProfileDTO expects
+  const minimalProfileData = {
+    userId: initialUser.userId,
+    fullName: initialUser.fullName,
+    linkedinUrl: linkedinUrl || "",
+    personalWebsite: personalWebsite || "",
+    bio: bio || "",
+    graduationYear: parseInt(graduationYear, 10) || 0
   };
+  
+  console.log("Sending minimal profile data:", minimalProfileData);
+  
+  try {
+    const result = await updateProfile(minimalProfileData);
+    console.log("Update result:", result);
+    
+    // Get fresh complete profile
+    const freshProfile = await getProfile(initialUser.userId);
+    onSave(freshProfile);
+    localStorage.setItem("currentUser", JSON.stringify(freshProfile));
+    
+    navigate(-1);
+  } catch (error: any) {
+    console.error("Update failed:", error);
+    console.error("Response data:", error.response?.data);
+    alert("Update failed: " + (error.response?.data?.message || error.message));
+  }
+};
 
   return (
     <div className="edit-profile">
@@ -169,7 +235,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onSave }) => {
 
         {/* Badge Management Section */}
         <div className="form-group">
-          <label>Badges:</label>
+          <label>Organization Badges:</label>
           
           {/* Existing Badges */}
           <div className="badges-list">
@@ -193,7 +259,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onSave }) => {
                 </div>
               ))
             ) : (
-              <p className="no-badges">No badges yet. Add your first badge below!</p>
+              <p className="no-badges">No badges yet. Add your first organizational badge below!</p>
             )}
           </div>
 

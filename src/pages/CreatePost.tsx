@@ -58,10 +58,6 @@ const CreatePost: React.FC<CreatePostProps> = ({ user }) => {
   return (
     <div className="create-post-container">
       <h1 className="create-post-header">Create Post</h1>
-      
-      <div className="user-info">
-        {user.fullName}
-      </div>
 
       {error && <div className="error-message">{error}</div>}
       {success && <div className="success-message">{success}</div>}

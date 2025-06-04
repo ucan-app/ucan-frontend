@@ -36,7 +36,7 @@
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  margin-right: 28px;
 }
 
 .form-group label {

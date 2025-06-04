@@ -112,8 +112,6 @@ const ViewProfile: React.FC<ViewProfileProps> = ({ user: currentUser }) => {
   
   return (
     <div className="user-profile">
-      <h1>Profile</h1> 
-      
       {/* Profile Header with Picture and Basic Info */}
       <div className="profile-header">
         <ProfilePictureDisplay 

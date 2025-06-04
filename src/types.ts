@@ -105,3 +105,15 @@ export function calculatePostScore(post: Post): number {
   return score;
 }
 */
+
+// =========================
+// Notification-related Types
+// =========================
+
+export type Notification = {
+  id: number;
+  recipientId: number;
+  message: string;
+  read: boolean;
+  createdAt: string;
+};

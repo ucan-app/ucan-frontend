@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { User } from "../types";
 import "./Layout.css";
+import NotificationBell from "./NotificationBell";
 
 interface LayoutProps {
   isLoggedIn: boolean;
@@ -64,38 +65,30 @@ const Layout: React.FC<LayoutProps> = ({
             />
             <span className="search-button">🔍</span>
           </div>
-          <div className="user-menu">
-            <button className="user-icon">
-              <img
-                src="/profile_icon.png"
-                alt="User"
-                className="user-icon-image"
-              />
-            </button>
-            <ul className="dropdown-menu">
-              {isLoggedIn ? (
-                <>
-                  <li>
-                    <a href="/profile">Profile</a>
-                  </li>
-                  <li>
-                    <a href="/create">Create Post</a>
-                  </li>
-                  <li>
-                    <button onClick={handleLogoutAndRedirect}>Logout</button>
-                  </li>
-                </>
-              ) : (
-                <>
-                  <li>
-                    <a href="/login">Login</a>
-                  </li>
-                  <li>
-                    <a href="/signup">Sign Up</a>
-                  </li>
-                </>
-              )}
-            </ul>
+          <div className="user-nav-group">
+            {/* Notification Bell */}
+            {currentUser && <NotificationBell userId={currentUser.userId} />}
+
+            {/* User Menu */}
+            <div className="user-menu">
+              <button className="user-icon">
+                <img src="/profile_icon.png" alt="User" className="user-icon-image" />
+              </button>
+              <ul className="dropdown-menu">
+                {isLoggedIn ? (
+                    <>
+                      <li><a href="/profile">Profile</a></li>
+                      <li><a href="/create">Create Post</a></li>
+                      <li><button onClick={handleLogoutAndRedirect}>Logout</button></li>
+                    </>
+                ) : (
+                    <>
+                      <li><a href="/login">Login</a></li>
+                      <li><a href="/signup">Sign Up</a></li>
+                    </>
+                )}
+              </ul>
+            </div>
           </div>
         </nav>
       </header>

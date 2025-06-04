@@ -161,3 +161,10 @@ body {
 .search-button:hover {
   transform: scale(1.1);
 }
+
+.user-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}

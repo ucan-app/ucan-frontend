@@ -1,27 +1,44 @@
 import React, { useEffect, useState } from "react";
-import { getNotifications, markAsRead } from "../api/notification";
-import { Notification as AppNotification } from "../types"; // avoid conflict with browser Notification
+import { getNotifications, markAsRead, getUnreadCount } from "../api/notification";
+import { Notification as AppNotification } from "../types";
 import "./NotificationBell.css";
 
 const NotificationBell: React.FC<{ userId: number }> = ({ userId }) => {
     const [notifications, setNotifications] = useState<AppNotification[]>([]);
     const [isOpen, setIsOpen] = useState(false);
+    const [unreadCount, setUnreadCount] = useState(0);
 
+    // Fetch unread count
     useEffect(() => {
-        const fetchNotifications = async () => {
+        const fetchUnread = async () => {
             try {
-                const result = await getNotifications(userId);
-                setNotifications(result);
+                const count = await getUnreadCount(userId);
+                setUnreadCount(count);
             } catch (error) {
-                console.error("Failed to fetch notifications:", error);
+                setUnreadCount(0);
             }
         };
-        fetchNotifications();
+        fetchUnread();
+        // Optionally poll every 30s:
+        const interval = setInterval(fetchUnread, 30000);
+        return () => clearInterval(interval);
     }, [userId]);
 
-    const unreadCount = notifications.filter((n) => !n.read).length;
+    // Fetch notifications when dropdown opens
+    const fetchNotifications = async () => {
+        try {
+            const result = await getNotifications(userId);
+            setNotifications(result);
+            setUnreadCount(result.filter(n => !n.read).length);
+        } catch (error) {
+            setNotifications([]);
+        }
+    };
 
-    const toggleDropdown = () => setIsOpen((prev) => !prev);
+    const toggleDropdown = () => {
+        setIsOpen((prev) => !prev);
+        if (!isOpen) fetchNotifications();
+    };
 
     const handleMarkAsRead = async (id: number) => {
         try {
@@ -29,8 +46,9 @@ const NotificationBell: React.FC<{ userId: number }> = ({ userId }) => {
             setNotifications((prev) =>
                 prev.map((n) => (n.id === id ? { ...n, read: true } : n))
             );
+            setUnreadCount((prev) => Math.max(0, prev - 1));
         } catch (error) {
-            console.error("Failed to mark notification as read:", error);
+            // handle error
         }
     };
 
@@ -49,19 +67,21 @@ const NotificationBell: React.FC<{ userId: number }> = ({ userId }) => {
                         <p className="no-notifications">No notifications</p>
                     ) : (
                         <ul>
-                            {notifications.map((n) => (
-                                <li
-                                    key={n.id}
-                                    onClick={() => handleMarkAsRead(n.id)}
-                                    style={{
-                                        fontWeight: n.read ? "normal" : "bold",
-                                        cursor: "pointer",
-                                        padding: "4px 0",
-                                    }}
-                                >
-                                    {n.message}
-                                </li>
-                            ))}
+                            {notifications
+                                .filter((n) => !n.read)
+                                .map((n) => (
+                                    <li
+                                        key={n.id}
+                                        onClick={() => handleMarkAsRead(n.id)}
+                                        style={{
+                                            fontWeight: n.read ? "normal" : "bold",
+                                            cursor: "pointer",
+                                            padding: "4px 0",
+                                        }}
+                                    >
+                                        {n.message}
+                                    </li>
+                                ))}
                         </ul>
                     )}
                 </div>

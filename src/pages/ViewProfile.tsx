@@ -4,7 +4,6 @@ import { User, Post } from "../types";
 import { getProfile } from "../api";
 import { getPostByCreator } from "../api/post";
 import "./ViewProfile.css";
-import NotificationBell from "../components/NotificationBell";
 
 type ViewProfileProps = {
   user: User | null; // The currently logged-in user
@@ -112,11 +111,6 @@ const ViewProfile: React.FC<ViewProfileProps> = ({ user: currentUser }) => {
   
   return (
     <div className="user-profile">
-      {currentUser && (
-          <div style={{ display: "flex", justifyContent: "flex-end", padding: "1rem" }}>
-            <NotificationBell userId={currentUser.userId} />
-          </div>
-      )}
       <h1>Profile</h1> 
       <div className="profile-info">
         <p>

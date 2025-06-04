@@ -13,6 +13,18 @@ export const getNotifications = async (userId: number): Promise<Notification[]> 
     }
 };
 
+export const getUnreadCount = async (userId: number): Promise<number> => {
+    try {
+        const response = await api.get(`/api/notifications/unread-count`, {
+            params: { userId },
+        });
+        return response.data;
+    } catch (error: any) {
+        handleApiError(error, "Failed to fetch unread notification count");
+        throw error;
+    }
+};
+
 // Mark a specific notification as read
 export const markAsRead = async (notificationId: number): Promise<void> => {
     try {

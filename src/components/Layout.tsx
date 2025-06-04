@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { User } from "../types";
-import ProfilePictureDisplay from "../components/ProfilePictureDisplay";
 import "./Layout.css";
+import NotificationBell from "./NotificationBell";
+import ProfilePictureDisplay from "./ProfilePictureDisplay";
 
 interface LayoutProps {
   isLoggedIn: boolean;
@@ -65,47 +66,57 @@ const Layout: React.FC<LayoutProps> = ({
             />
             <span className="search-button">🔍</span>
           </div>
-          <div className="user-menu">
-            <button className="user-icon">
-              {isLoggedIn && currentUser ? (
-                <ProfilePictureDisplay
-                  userId={currentUser.userId}
-                  userName={currentUser.fullName}
-                  size="small"
-                  className="header-profile-picture"
-                />
-              ) : (
-                <img
-                  src="/profile_icon.png"
-                  alt="User"
-                  className="user-icon-image"
-                />
-              )}
-            </button>
-            <ul className="dropdown-menu">
-              {isLoggedIn ? (
-                <>
-                  <li>
-                    <a href="/profile">Profile</a>
-                  </li>
-                  <li>
-                    <a href="/create">Create Post</a>
-                  </li>
-                  <li>
-                    <button onClick={handleLogoutAndRedirect}>Logout</button>
-                  </li>
-                </>
-              ) : (
-                <>
-                  <li>
-                    <a href="/login">Login</a>
-                  </li>
-                  <li>
-                    <a href="/signup">Sign Up</a>
-                  </li>
-                </>
-              )}
-            </ul>
+          <div className="user-nav-group">
+            {/* Notification Bell - Only show when user is logged in */}
+            {currentUser && (
+              <div className="notification-wrapper">
+                <NotificationBell userId={currentUser.userId} />
+              </div>
+            )}
+
+            {/* User Menu */}
+            <div className="user-menu">
+              <button className="user-icon">
+                {isLoggedIn && currentUser ? (
+                  <ProfilePictureDisplay
+                    userId={currentUser.userId}
+                    userName={currentUser.fullName}
+                    size="small"
+                    className="header-profile-picture"
+                  />
+                ) : (
+                  <img
+                    src="/profile_icon.png"
+                    alt="User"
+                    className="user-icon-image"
+                  />
+                )}
+              </button>
+              <ul className="dropdown-menu">
+                {isLoggedIn ? (
+                  <>
+                    <li>
+                      <a href="/profile">Profile</a>
+                    </li>
+                    <li>
+                      <a href="/create">Create Post</a>
+                    </li>
+                    <li>
+                      <button onClick={handleLogoutAndRedirect}>Logout</button>
+                    </li>
+                  </>
+                ) : (
+                  <>
+                    <li>
+                      <a href="/login">Login</a>
+                    </li>
+                    <li>
+                      <a href="/signup">Sign Up</a>
+                    </li>
+                  </>
+                )}
+              </ul>
+            </div>
           </div>
         </nav>
       </header>

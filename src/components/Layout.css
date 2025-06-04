@@ -162,6 +162,14 @@ body {
   transform: scale(1.1);
 }
 
+.user-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+
+
 .header-profile-picture {
   width: 36px;
   height: 36px;

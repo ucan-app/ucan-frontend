@@ -28,7 +28,11 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onSave }) => {
   const [loading, setLoading] = useState(true);
   const [uploadingProfilePicture, setUploadingProfilePicture] = useState(false); 
   const [selectedProfilePicture, setSelectedProfilePicture] = useState<File | null>(null); 
-  const [currentProfilePictureUrl, setCurrentProfilePictureUrl] = useState<string | null>(null); 
+  const [currentProfilePictureUrl, setCurrentProfilePictureUrl] = useState<string | null>(null);
+  
+  // Add state for badge success message
+  const [badgeMessage, setBadgeMessage] = useState("");
+  const [badgeMessageType, setBadgeMessageType] = useState<"success" | "error" | "">("");
 
   // Initialize form data when user data is available
   useEffect(() => {
@@ -93,9 +97,14 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onSave }) => {
     e.preventDefault();
     if (!newBadgeEmail.trim()) return;
 
+    // Clear any previous messages
+    setBadgeMessage("");
+    setBadgeMessageType("");
+
     // Validate email format
     if (!validateEmail(newBadgeEmail.trim())) {
-      alert("Please enter a valid email address (e.g., user@amazon.com)");
+      setBadgeMessage("Please enter a valid email address (e.g., user@amazon.com)");
+      setBadgeMessageType("error");
       return;
     }
 
@@ -120,10 +129,15 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onSave }) => {
       
       setNewBadgeEmail("");
       
+      // Show success message
+      setBadgeMessage("Badge added successfully! Please verify your badge using the link sent to your email.");
+      setBadgeMessageType("success");
+      
       console.log("Badge added and form state refreshed successfully");
     } catch (error) {
       console.error("Failed to add badge:", error);
-      alert("Failed to add badge. Please make sure you're using a valid organizational email address.");
+      setBadgeMessage("Failed to add badge. Please make sure you're using a valid organizational email address.");
+      setBadgeMessageType("error");
     } finally {
       setAddingBadge(false);
     }
@@ -131,6 +145,10 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onSave }) => {
 
   const handleRemoveBadge = async (organizationName: string) => {
     console.log("Attempting to remove badge:", organizationName);
+    
+    // Clear badge messages when removing
+    setBadgeMessage("");
+    setBadgeMessageType("");
     
     setRemovingBadges(prev => new Set(prev).add(organizationName));
     
@@ -151,7 +169,8 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onSave }) => {
       console.log("Badge removed and form state refreshed successfully");
     } catch (error) {
       console.error("Failed to remove badge:", error);
-      alert("Failed to remove badge. Please try again.");
+      setBadgeMessage("Failed to remove badge. Please try again.");
+      setBadgeMessageType("error");
     } finally {
       setRemovingBadges(prev => {
         const newSet = new Set(prev);
@@ -160,192 +179,91 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onSave }) => {
       });
     }
   };
-  
-  /*const handleProfilePictureSelect = (file: File) => {
+
+  const handleProfilePictureSelect = (file: File) => {
+    console.log("File selected:", file.name, file.size);
     setSelectedProfilePicture(file);
   };
 
   const handleProfilePictureRemove = () => {
-    setSelectedProfilePicture(null);
-  };
-*/
-  /*const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  
-  // Send only the fields that UserProfileDTO expects
-  const minimalProfileData = {
-    userId: initialUser.userId,
-    fullName: initialUser.fullName,
-    linkedinUrl: linkedinUrl || "",
-    personalWebsite: personalWebsite || "",
-    bio: bio || "",
-    graduationYear: parseInt(graduationYear, 10) || 0
-  };
-  
-  console.log("Sending minimal profile data:", minimalProfileData);
-  
-  try {
-    const result = await updateProfile(minimalProfileData);
-    console.log("Update result:", result);
-    
-    // Get fresh complete profile
-    const freshProfile = await getProfile(initialUser.userId);
-    onSave(freshProfile);
-    localStorage.setItem("currentUser", JSON.stringify(freshProfile));
-    
-    navigate(-1);
-  } catch (error: any) {
-    console.error("Update failed:", error);
-    console.error("Response data:", error.response?.data);
-    alert("Update failed: " + (error.response?.data?.message || error.message));
-  }
-};*/
-/*
-  const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  
-  try {
-    // Handle profile picture upload SEPARATELY if user selected one
-    if (selectedProfilePicture) {
-      setUploadingProfilePicture(true);
-      console.log("Uploading profile picture...");
-      try {
-        const imageUrl = await uploadProfilePicture(selectedProfilePicture);
-        console.log("Profile picture uploaded successfully:", imageUrl);
-        // Update the current display URL
-        setCurrentProfilePictureUrl(imageUrl);
-      } catch (error) {
-        console.error("Profile picture upload failed:", error);
-        alert("Failed to upload profile picture. Please try again.");
-        setUploadingProfilePicture(false);
-        return; // Don't proceed with profile update if image upload fails
-      } finally {
-        setUploadingProfilePicture(false);
-      }
-    }
-    
-    // Parse graduation year properly - only include if it's a valid number
-    let parsedGraduationYear: number | undefined;
-    if (graduationYear.trim() && !isNaN(parseInt(graduationYear, 10))) {
-      parsedGraduationYear = parseInt(graduationYear, 10);
-    }
-    
-    // Send only the profile fields (NO image data here)
-    const minimalProfileData: any = {
-      userId: initialUser.userId,
-      fullName: initialUser.fullName,
-      linkedinUrl: linkedinUrl || "",
-      personalWebsite: personalWebsite || "",
-      bio: bio || "",
-    };
-    
-    // Only include graduationYear if it has a valid value
-    if (parsedGraduationYear !== undefined) {
-      minimalProfileData.graduationYear = parsedGraduationYear;
-    }
-    
-    console.log("Sending minimal profile data:", minimalProfileData);
-    
-    const result = await updateProfile(minimalProfileData);
-    console.log("Update result:", result);
-    
-    // Get fresh complete profile (this will include the updated image if uploaded)
-    const freshProfile = await getProfile(initialUser.userId);
-    onSave(freshProfile);
-    localStorage.setItem("currentUser", JSON.stringify(freshProfile));
-    
-    navigate(-1);
-    } catch (error: any) {
-      console.error("Update failed:", error);
-      console.error("Response data:", error.response?.data);
-      alert("Update failed: " + (error.response?.data?.message || error.message));
-    }
-  };
-*/
-// Simple debugging for EditProfile - just add these console.logs:
-
-const handleProfilePictureSelect = (file: File) => {
-  console.log("File selected:", file.name, file.size);
-  setSelectedProfilePicture(file);
-};
-const handleProfilePictureRemove = () => {
     console.log("File removed:");
     setSelectedProfilePicture(null);
   };
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  
-  console.log("Submit started, selected file:", selectedProfilePicture?.name || "none");
-  
-  try {
-    // Handle profile picture upload
-    if (selectedProfilePicture) {
-      console.log("Starting upload...");
-      setUploadingProfilePicture(true);
-      
-      try {
-        const imageUrl = await uploadProfilePicture(selectedProfilePicture);
-        console.log("Upload success:", imageUrl);
-        setCurrentProfilePictureUrl(imageUrl);
-      } catch (error) {
-        console.log("Upload failed:", error);
-        alert("Failed to upload profile picture: " + error);
-        setUploadingProfilePicture(false);
-        return;
-      } finally {
-        setUploadingProfilePicture(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    console.log("Submit started, selected file:", selectedProfilePicture?.name || "none");
+    
+    try {
+      // Handle profile picture upload
+      if (selectedProfilePicture) {
+        console.log("Starting upload...");
+        setUploadingProfilePicture(true);
+        
+        try {
+          const imageUrl = await uploadProfilePicture(selectedProfilePicture);
+          console.log("Upload success:", imageUrl);
+          setCurrentProfilePictureUrl(imageUrl);
+        } catch (error) {
+          console.log("Upload failed:", error);
+          alert("Failed to upload profile picture: " + error);
+          setUploadingProfilePicture(false);
+          return;
+        } finally {
+          setUploadingProfilePicture(false);
+        }
       }
+      
+      // Profile update code (unchanged)
+      let parsedGraduationYear: number | undefined;
+      if (graduationYear.trim() && !isNaN(parseInt(graduationYear, 10))) {
+        parsedGraduationYear = parseInt(graduationYear, 10);
+      }
+      
+      const minimalProfileData: any = {
+        userId: initialUser.userId,
+        fullName: initialUser.fullName,
+        linkedinUrl: linkedinUrl || "",
+        personalWebsite: personalWebsite || "",
+        bio: bio || "",
+      };
+      
+      if (parsedGraduationYear !== undefined) {
+        minimalProfileData.graduationYear = parsedGraduationYear;
+      }
+      
+      console.log("Updating profile...");
+      const result = await updateProfile(minimalProfileData);
+      console.log("Profile updated");
+      
+      const freshProfile = await getProfile(initialUser.userId);
+      onSave(freshProfile);
+      localStorage.setItem("currentUser", JSON.stringify(freshProfile));
+      
+      navigate(-1);
+    } catch (error: any) {
+      console.log("Submit error:", error.message);
+      alert("Update failed: " + (error.response?.data?.message || error.message));
     }
-    
-    // Profile update code (unchanged)
-    let parsedGraduationYear: number | undefined;
-    if (graduationYear.trim() && !isNaN(parseInt(graduationYear, 10))) {
-      parsedGraduationYear = parseInt(graduationYear, 10);
-    }
-    
-    const minimalProfileData: any = {
-      userId: initialUser.userId,
-      fullName: initialUser.fullName,
-      linkedinUrl: linkedinUrl || "",
-      personalWebsite: personalWebsite || "",
-      bio: bio || "",
-    };
-    
-    if (parsedGraduationYear !== undefined) {
-      minimalProfileData.graduationYear = parsedGraduationYear;
-    }
-    
-    console.log("Updating profile...");
-    const result = await updateProfile(minimalProfileData);
-    console.log("Profile updated");
-    
-    const freshProfile = await getProfile(initialUser.userId);
-    onSave(freshProfile);
-    localStorage.setItem("currentUser", JSON.stringify(freshProfile));
-    
-    navigate(-1);
-  } catch (error: any) {
-    console.log("Submit error:", error.message);
-    alert("Update failed: " + (error.response?.data?.message || error.message));
-  }
-};
+  };
 
   return (
     <div className="edit-profile">
       <h1>Edit Profile</h1>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-        <label>Profile Picture:</label>
-        <ImageUpload
-          onImageSelect={handleProfilePictureSelect}
-          onImageRemove={handleProfilePictureRemove}
-          currentImageUrl={currentProfilePictureUrl || undefined}
-          isUploading={uploadingProfilePicture}
-          className="profile-picture-upload"
-          label="Upload Profile Picture"
-          showPreview={true}
-        />
-      </div>
+          <label>Profile Picture:</label>
+          <ImageUpload
+            onImageSelect={handleProfilePictureSelect}
+            onImageRemove={handleProfilePictureRemove}
+            currentImageUrl={currentProfilePictureUrl || undefined}
+            isUploading={uploadingProfilePicture}
+            className="profile-picture-upload"
+            label="Upload Profile Picture"
+            showPreview={true}
+          />
+        </div>
         <div className="form-group">
           <label>
             Bio:
@@ -400,6 +318,13 @@ const handleSubmit = async (e: React.FormEvent) => {
         {/* Badge Management Section */}
         <div className="form-group">
           <label>Organization Badges:</label>
+          
+          {/* Badge Message Display */}
+          {badgeMessage && (
+            <div className={`badge-message ${badgeMessageType}`}>
+              {badgeMessage}
+            </div>
+          )}
           
           {/* Existing Badges */}
           <div className="badges-list">

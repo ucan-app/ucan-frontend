@@ -19,7 +19,7 @@ const Signup: React.FC = () => {
 
     try {
       await register(username, email, password);
-      setMessage("Signup successful! You can now log in.");
+      setMessage("Signup successful! Please verify your account using the link sent to your email.");
       setMessageType("success");
       // Clear form on success
       setUsername("");

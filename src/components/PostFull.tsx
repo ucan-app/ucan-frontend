@@ -4,6 +4,7 @@ import CommentSection from "./CommentSection";
 import { getProfile } from "../api";
 import { upvotePost, downvotePost, getPost, deletePost, updatePost } from "../api/post";
 import { useNavigate } from "react-router-dom";
+import ProfilePictureDisplay from "../components/ProfilePictureDisplay";
 import "./PostFull.css";
 
 interface PostFullProps {
@@ -176,14 +177,43 @@ const PostFull: React.FC<PostFullProps> = ({
         )}
         
         <div className="post-full-author-section">
-          <div className="post-full-author">
-            <span 
-              className="clickable-author"
-              onClick={handleAuthorClick}
-              title="View profile"
-            >
-              {author?.fullName || "Unknown User"}
-            </span>
+          <div className="post-full-author-info">
+            {loading ? (
+              <div className="author-loading">
+                <img
+                  src="/profile_icon_black.png"
+                  alt="Profile"
+                  className="author-profile-icon"
+                />
+                <span className="author-name">Loading...</span>
+              </div>
+            ) : author ? (
+              <div 
+                className="author-with-picture"
+                onClick={handleAuthorClick}
+                style={{ cursor: "pointer" }}
+                title="View profile"
+              >
+                <ProfilePictureDisplay
+                  userId={author.userId}
+                  userName={author.fullName}
+                  size="small"
+                  className="post-full-profile-picture"
+                />
+                <span className="author-name clickable-author">
+                  {author.fullName}
+                </span>
+              </div>
+            ) : (
+              <div className="author-unknown">
+                <img
+                  src="/profile_icon_black.png"
+                  alt="Profile"
+                  className="author-profile-icon"
+                />
+                <span className="author-name">Unknown User</span>
+              </div>
+            )}
           </div>
           
           {/* Post Actions - Only show if user owns the post */}

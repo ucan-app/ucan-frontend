@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Badge, User } from "../types";
 import { updateProfile, addBadge, removeBadge, getProfile } from "../api";
+import { uploadProfilePicture, getProfilePictureUrl } from "../api/image"; 
+import ImageUpload from "../components/ImageUpload"; 
 import "./EditProfile.css";
 
 type EditProfileProps = {
@@ -24,6 +26,9 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onSave }) => {
   const [addingBadge, setAddingBadge] = useState(false);
   const [removingBadges, setRemovingBadges] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
+  const [uploadingProfilePicture, setUploadingProfilePicture] = useState(false); 
+  const [selectedProfilePicture, setSelectedProfilePicture] = useState<File | null>(null); 
+  const [currentProfilePictureUrl, setCurrentProfilePictureUrl] = useState<string | null>(null); 
 
   // Initialize form data when user data is available
   useEffect(() => {
@@ -42,6 +47,16 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onSave }) => {
         setPersonalWebsite(latestUserData.personalWebsite || "");
         setBadges(latestUserData.badges || []);
         
+        // Fetch current profile picture separately
+        try {
+          const profilePictureUrl = await getProfilePictureUrl(latestUserData.userId.toString());
+          setCurrentProfilePictureUrl(profilePictureUrl);
+          console.log("Current profile picture URL:", profilePictureUrl);
+        } catch (error) {
+          console.log("No profile picture found, which is normal for new users");
+          setCurrentProfilePictureUrl(null);
+        }
+
         console.log("Form initialized with latest user data:", latestUserData);
         console.log("Initial badges:", latestUserData.badges);
       } catch (error) {
@@ -145,8 +160,16 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onSave }) => {
       });
     }
   };
+  
+  /*const handleProfilePictureSelect = (file: File) => {
+    setSelectedProfilePicture(file);
+  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleProfilePictureRemove = () => {
+    setSelectedProfilePicture(null);
+  };
+*/
+  /*const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   
   // Send only the fields that UserProfileDTO expects
@@ -176,12 +199,153 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onSave }) => {
     console.error("Response data:", error.response?.data);
     alert("Update failed: " + (error.response?.data?.message || error.message));
   }
+};*/
+/*
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  
+  try {
+    // Handle profile picture upload SEPARATELY if user selected one
+    if (selectedProfilePicture) {
+      setUploadingProfilePicture(true);
+      console.log("Uploading profile picture...");
+      try {
+        const imageUrl = await uploadProfilePicture(selectedProfilePicture);
+        console.log("Profile picture uploaded successfully:", imageUrl);
+        // Update the current display URL
+        setCurrentProfilePictureUrl(imageUrl);
+      } catch (error) {
+        console.error("Profile picture upload failed:", error);
+        alert("Failed to upload profile picture. Please try again.");
+        setUploadingProfilePicture(false);
+        return; // Don't proceed with profile update if image upload fails
+      } finally {
+        setUploadingProfilePicture(false);
+      }
+    }
+    
+    // Parse graduation year properly - only include if it's a valid number
+    let parsedGraduationYear: number | undefined;
+    if (graduationYear.trim() && !isNaN(parseInt(graduationYear, 10))) {
+      parsedGraduationYear = parseInt(graduationYear, 10);
+    }
+    
+    // Send only the profile fields (NO image data here)
+    const minimalProfileData: any = {
+      userId: initialUser.userId,
+      fullName: initialUser.fullName,
+      linkedinUrl: linkedinUrl || "",
+      personalWebsite: personalWebsite || "",
+      bio: bio || "",
+    };
+    
+    // Only include graduationYear if it has a valid value
+    if (parsedGraduationYear !== undefined) {
+      minimalProfileData.graduationYear = parsedGraduationYear;
+    }
+    
+    console.log("Sending minimal profile data:", minimalProfileData);
+    
+    const result = await updateProfile(minimalProfileData);
+    console.log("Update result:", result);
+    
+    // Get fresh complete profile (this will include the updated image if uploaded)
+    const freshProfile = await getProfile(initialUser.userId);
+    onSave(freshProfile);
+    localStorage.setItem("currentUser", JSON.stringify(freshProfile));
+    
+    navigate(-1);
+    } catch (error: any) {
+      console.error("Update failed:", error);
+      console.error("Response data:", error.response?.data);
+      alert("Update failed: " + (error.response?.data?.message || error.message));
+    }
+  };
+*/
+// Simple debugging for EditProfile - just add these console.logs:
+
+const handleProfilePictureSelect = (file: File) => {
+  console.log("File selected:", file.name, file.size);
+  setSelectedProfilePicture(file);
+};
+const handleProfilePictureRemove = () => {
+    console.log("File removed:");
+    setSelectedProfilePicture(null);
+  };
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  
+  console.log("Submit started, selected file:", selectedProfilePicture?.name || "none");
+  
+  try {
+    // Handle profile picture upload
+    if (selectedProfilePicture) {
+      console.log("Starting upload...");
+      setUploadingProfilePicture(true);
+      
+      try {
+        const imageUrl = await uploadProfilePicture(selectedProfilePicture);
+        console.log("Upload success:", imageUrl);
+        setCurrentProfilePictureUrl(imageUrl);
+      } catch (error) {
+        console.log("Upload failed:", error);
+        alert("Failed to upload profile picture: " + error);
+        setUploadingProfilePicture(false);
+        return;
+      } finally {
+        setUploadingProfilePicture(false);
+      }
+    }
+    
+    // Profile update code (unchanged)
+    let parsedGraduationYear: number | undefined;
+    if (graduationYear.trim() && !isNaN(parseInt(graduationYear, 10))) {
+      parsedGraduationYear = parseInt(graduationYear, 10);
+    }
+    
+    const minimalProfileData: any = {
+      userId: initialUser.userId,
+      fullName: initialUser.fullName,
+      linkedinUrl: linkedinUrl || "",
+      personalWebsite: personalWebsite || "",
+      bio: bio || "",
+    };
+    
+    if (parsedGraduationYear !== undefined) {
+      minimalProfileData.graduationYear = parsedGraduationYear;
+    }
+    
+    console.log("Updating profile...");
+    const result = await updateProfile(minimalProfileData);
+    console.log("Profile updated");
+    
+    const freshProfile = await getProfile(initialUser.userId);
+    onSave(freshProfile);
+    localStorage.setItem("currentUser", JSON.stringify(freshProfile));
+    
+    navigate(-1);
+  } catch (error: any) {
+    console.log("Submit error:", error.message);
+    alert("Update failed: " + (error.response?.data?.message || error.message));
+  }
 };
 
   return (
     <div className="edit-profile">
       <h1>Edit Profile</h1>
       <form onSubmit={handleSubmit}>
+        <div className="form-group">
+        <label>Profile Picture:</label>
+        <ImageUpload
+          onImageSelect={handleProfilePictureSelect}
+          onImageRemove={handleProfilePictureRemove}
+          currentImageUrl={currentProfilePictureUrl || undefined}
+          isUploading={uploadingProfilePicture}
+          className="profile-picture-upload"
+          label="Upload Profile Picture"
+          showPreview={true}
+        />
+      </div>
         <div className="form-group">
           <label>
             Bio:
@@ -292,11 +456,14 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onSave }) => {
 
         {/* Form Actions */}
         <div className="form-actions">
-          <button type="submit" className="save-btn">Save</button>
+          <button type="submit" className="save-btn" disabled={uploadingProfilePicture}>
+            {uploadingProfilePicture ? "Uploading Image..." : "Save Profile"}
+          </button>
           <button 
             type="button" 
             onClick={() => navigate(-1)} 
             className="cancel-btn"
+            disabled={uploadingProfilePicture}
           >
             Cancel
           </button>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Post, User } from "../types";
 import { useNavigate } from "react-router-dom";
 import { getProfile } from "../api";
+import ProfilePictureDisplay from "../components/ProfilePictureDisplay";
 import "./PostPreview.css";
 
 interface PostPreviewProps {
@@ -32,20 +33,50 @@ const PostPreview: React.FC<PostPreviewProps> = ({ post }) => {
     navigate(`/post/${post.id}`);
   };
 
+  const handleAuthorClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent navigating to the post
+    if (author) {
+      navigate(`/profile/${author.userId}`);
+    }
+  };
+
   return (
     <div className="post-preview"
          onClick={handleClick}
          style={{ cursor: "pointer" }}>
       <div className="post-left">
-        <img
-          src="/profile_icon_black.png"
-          alt="Profile"
-          className="profile-icon"
-        />
+        {loading ? (
+          <div className="profile-icon-placeholder">
+            <img
+              src="/profile_icon_black.png"
+              alt="Profile"
+              className="profile-icon"
+            />
+          </div>
+        ) : author ? (
+          <div onClick={handleAuthorClick} style={{ cursor: "pointer" }}>
+            <ProfilePictureDisplay
+              userId={author.userId}
+              userName={author.fullName}
+              size="medium"
+              className="post-preview-profile-picture"
+            />
+          </div>
+        ) : (
+          <img
+            src="/profile_icon_black.png"
+            alt="Profile"
+            className="profile-icon"
+          />
+        )}
       </div>
       <div className="post-right">
         <div className="post-header">
-          <span className="post-author">
+          <span 
+            className="post-author"
+            onClick={handleAuthorClick}
+            style={{ cursor: "pointer" }}
+          >
             {loading ? "Loading..." : author?.fullName || "Unknown User"}
           </span>
         </div>

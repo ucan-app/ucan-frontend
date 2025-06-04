@@ -278,3 +278,79 @@
     min-width: 0;
   }
 }
+
+/* Post Image Styles */
+.post-image-container {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+
+.post-image {
+  max-width: 100%;
+  max-height: 500px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  object-fit: contain;
+}
+
+/* Responsive Design for Images */
+@media (max-width: 768px) {
+  .post-image {
+    max-height: 300px;
+  }
+}
+
+.post-full-author-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.author-with-picture {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: opacity 0.2s ease;
+}
+
+.author-with-picture:hover {
+  opacity: 0.8;
+}
+
+.author-loading,
+.author-unknown {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.author-profile-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.post-full-profile-picture {
+  flex-shrink: 0;
+}
+
+.author-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.clickable-author {
+  transition: color 0.2s ease;
+}
+
+.clickable-author:hover {
+  color: #007bff;
+  text-decoration: underline;
+}
+
+.post-full-author-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}

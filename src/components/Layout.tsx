@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { User } from "../types";
+import ProfilePictureDisplay from "../components/ProfilePictureDisplay";
 import "./Layout.css";
 
 interface LayoutProps {
@@ -66,11 +67,20 @@ const Layout: React.FC<LayoutProps> = ({
           </div>
           <div className="user-menu">
             <button className="user-icon">
-              <img
-                src="/profile_icon.png"
-                alt="User"
-                className="user-icon-image"
-              />
+              {isLoggedIn && currentUser ? (
+                <ProfilePictureDisplay
+                  userId={currentUser.userId}
+                  userName={currentUser.fullName}
+                  size="small"
+                  className="header-profile-picture"
+                />
+              ) : (
+                <img
+                  src="/profile_icon.png"
+                  alt="User"
+                  className="user-icon-image"
+                />
+              )}
             </button>
             <ul className="dropdown-menu">
               {isLoggedIn ? (

@@ -7,15 +7,30 @@ const Signup: React.FC = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState<"success" | "error" | "">("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    setMessage("");
+    setMessageType("");
+
     try {
       await register(username, email, password);
-      alert("Signup successful! You can now log in.");
-    } catch (error) {
+      setMessage("Signup successful! You can now log in.");
+      setMessageType("success");
+      // Clear form on success
+      setUsername("");
+      setEmail("");
+      setPassword("");
+    } catch (error: any) {
       console.error("Signup failed:", error);
-      alert("Signup failed. Please try again.");
+      setMessage(error.response?.data?.message || "Signup failed. Please try again.");
+      setMessageType("error");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -25,6 +40,14 @@ const Signup: React.FC = () => {
         <div className="signup-header">
           <h2>Create Account</h2>
         </div>
+        
+        {/* Message Display */}
+        {message && (
+          <div className={`message ${messageType}`}>
+            {message}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="signup-form">
           <div className="form-group">
             <label>Username</label>
@@ -33,6 +56,7 @@ const Signup: React.FC = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
+              disabled={isLoading}
             />
           </div>
           <div className="form-group">
@@ -42,6 +66,7 @@ const Signup: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={isLoading}
             />
           </div>
           <div className="form-group">
@@ -51,9 +76,16 @@ const Signup: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={isLoading}
             />
           </div>
-          <button type="submit" className="signup-button">Sign Up</button>
+          <button 
+            type="submit" 
+            className="signup-button"
+            disabled={isLoading}
+          >
+            {isLoading ? "Creating Account..." : "Sign Up"}
+          </button>
           <div className="login-link">
             Already have an account? <Link to="/login">Log in</Link>
           </div>

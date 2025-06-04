@@ -34,6 +34,7 @@ export type Post = {
   creatorId: number;
   createdAt: Date;
   updatedAt: Date;
+  imageUrl?: string;
 };
 
 // This interface matches Spring Data's Page interface

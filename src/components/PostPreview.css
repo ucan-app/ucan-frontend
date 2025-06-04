@@ -101,3 +101,23 @@
 .downvote-display {
   color: #dc3545;
 }
+
+.post-preview-profile-picture {
+  width: 40px;
+  height: 40px;
+}
+
+.profile-icon-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.post-author {
+  transition: color 0.2s ease;
+}
+
+.post-author:hover {
+  color: #007bff;
+  text-decoration: underline;
+}

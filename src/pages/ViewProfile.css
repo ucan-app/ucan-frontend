@@ -1,5 +1,135 @@
-/* Add this to your ViewProfile.css file */
+/* Profile Header Styles */
+.profile-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 30px;
+  padding: 20px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
 
+.profile-main-picture {
+  flex-shrink: 0;
+}
+
+.profile-header-info {
+  flex: 1;
+}
+
+.profile-header-info h2 {
+  margin: 0 0 10px 0;
+  font-size: 1.8em;
+  color: #333;
+  font-weight: 600;
+}
+
+.profile-bio {
+  color: #666;
+  font-style: italic;
+  margin: 0;
+  line-height: 1.4;
+  font-size: 1rem;
+}
+
+/* Profile Info Section */
+.profile-info {
+  margin-bottom: 2rem;
+}
+
+.profile-info p {
+  margin: 0.5rem 0;
+  color: #555;
+}
+
+.profile-info strong {
+  color: #333;
+}
+
+.profile-info a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.profile-info a:hover {
+  text-decoration: underline;
+}
+
+/* Badge Styles */
+.profile-badges {
+  margin-top: 1.5rem;
+}
+
+.badges-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.profile-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.profile-badge.validated {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.profile-badge.unvalidated {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.badge-name {
+  font-weight: 600;
+}
+
+.validation-status {
+  font-size: 0.8rem;
+}
+
+/* Post Card Updates for Profile Pictures */
+.post-author-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.post-author-picture {
+  flex-shrink: 0;
+}
+
+.post-metadata {
+  flex: 1;
+}
+
+/* Edit Profile Button */
+.edit-profile-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 2rem;
+}
+
+.edit-profile-btn:hover {
+  background-color: #218838;
+}
+
+/* Posts Section Styles (preserved from your original) */
 .profile-posts {
   margin-top: 2rem;
   padding-top: 2rem;
@@ -116,21 +246,76 @@
   background-color: #0056b3;
 }
 
+.profile-picture-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Error and Loading States */
+.error-message {
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+  }
+  
+  .profile-header-info h2 {
+    font-size: 1.5em;
+  }
+  
   .post-card-header {
     flex-direction: column;
     align-items: flex-start;
+  }
+  
+  .post-author-info {
+    margin-bottom: 0.5rem;
   }
   
   .post-card-metadata {
     flex-direction: row;
     align-items: center;
     margin-top: 0.5rem;
+    align-self: flex-start;
   }
   
   .post-card-title {
     margin-right: 0;
     margin-bottom: 0.5rem;
+  }
+  
+  .badges-container {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-header {
+    padding: 15px 0;
+  }
+  
+  .profile-header-info h2 {
+    font-size: 1.3em;
+  }
+  
+  .post-author-info {
+    gap: 8px;
+  }
+  
+  .profile-badge {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
   }
 }

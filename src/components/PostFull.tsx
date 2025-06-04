@@ -241,7 +241,25 @@ const PostFull: React.FC<PostFullProps> = ({
             disabled={saving}
           />
         ) : (
-          post.description
+          <>
+            {post.description}
+            
+            {/* Post Image */}
+            {post.imageUrl && (
+              <div className="post-image-container">
+                <img 
+                  src={post.imageUrl} 
+                  alt="Post image"
+                  className="post-image"
+                  onError={(e) => {
+                    console.error("Failed to load post image:", post.imageUrl);
+                    // Hide image if it fails to load
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              </div>
+            )}
+          </>
         )}
       </div>
       

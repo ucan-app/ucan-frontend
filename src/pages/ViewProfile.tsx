@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { User, Post } from "../types";
 import { getProfile } from "../api";
 import { getPostByCreator } from "../api/post";
+import ProfilePictureDisplay from "../components/ProfilePictureDisplay";
 import "./ViewProfile.css";
 
 type ViewProfileProps = {
@@ -112,15 +113,24 @@ const ViewProfile: React.FC<ViewProfileProps> = ({ user: currentUser }) => {
   return (
     <div className="user-profile">
       <h1>Profile</h1> 
+      
+      {/* Profile Header with Picture and Basic Info */}
+      <div className="profile-header">
+        <ProfilePictureDisplay 
+          userId={profileUser.userId}
+          userName={profileUser.fullName}
+          size="large"
+          className="profile-main-picture"
+        />
+        <div className="profile-header-info">
+          <h2>@{profileUser.fullName}</h2>
+          {profileUser.bio && (
+            <p className="profile-bio">{profileUser.bio}</p>
+          )}
+        </div>
+      </div>
+
       <div className="profile-info">
-        <p>
-          <strong>Username:</strong> @{profileUser.fullName}
-        </p>
-        {profileUser.bio && (
-          <p>
-           <strong>Bio:</strong> {profileUser.bio}
-          </p>
-        )}
         {profileUser.graduationYear && (
           <p>
            <strong>Graduation Year:</strong> {profileUser.graduationYear}
@@ -187,12 +197,22 @@ const ViewProfile: React.FC<ViewProfileProps> = ({ user: currentUser }) => {
                 style={{ cursor: 'pointer' }}
               >
                 <div className="post-card-header">
-                  <h3 className="post-card-title">{post.title}</h3>
-                  <div className="post-card-metadata">
-                    <span className="post-date">{formatDate(post.createdAt)}</span>
-                    <div className="post-votes">
-                      <span className="upvotes">↑ {post.upvote || 0}</span>
-                      <span className="downvotes">↓ {post.downvote || 0}</span>
+                  <div className="post-author-info">
+                    <ProfilePictureDisplay 
+                      userId={profileUser.userId}
+                      userName={profileUser.fullName}
+                      size="small"
+                      className="post-author-picture"
+                    />
+                    <div className="post-metadata">
+                      <h3 className="post-card-title">{post.title}</h3>
+                      <div className="post-card-metadata">
+                        <span className="post-date">{formatDate(post.createdAt)}</span>
+                        <div className="post-votes">
+                          <span className="upvotes">↑ {post.upvote || 0}</span>
+                          <span className="downvotes">↓ {post.downvote || 0}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -2,7 +2,7 @@ import { api, handleApiError } from "./index";
 import { Page, Post } from "../types";
 
 // Post endpoints
-export const createPost = async (postData: { title: string; description: string; creatorId: number }): Promise<Post> => {
+/*export const createPost = async (postData: { title: string; description: string; creatorId: number }): Promise<Post> => {
   try {
     const params = new URLSearchParams();
     params.append('title', postData.title);
@@ -20,6 +20,38 @@ export const createPost = async (postData: { title: string; description: string;
     );
 
     console.log("Creat post response", response.data);
+    return response.data;
+  } catch (error: any) {
+    handleApiError(error, "Failed to create post");
+    throw error;
+  }
+};*/
+
+// Replace your existing createPost function with this:
+export const createPost = async (postData: { 
+  title: string; 
+  description: string; 
+  creatorId: number;
+  image?: File; // Add this optional parameter
+}): Promise<Post> => {
+  try {
+    const formData = new FormData();
+    formData.append('title', postData.title);
+    formData.append('description', postData.description);
+    formData.append('creatorId', postData.creatorId.toString());
+    
+    // Add image if provided
+    if (postData.image) {
+      formData.append('image', postData.image);
+    }
+
+    const response = await api.post('/api/posts', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    console.log("Create post response", response.data);
     return response.data;
   } catch (error: any) {
     handleApiError(error, "Failed to create post");

@@ -3,6 +3,7 @@ import { PostComment, User, UserReply } from "../types";
 import { getProfile } from "../api";
 import { getReplies, createReply } from "../api/reply";
 import { useNavigate } from "react-router-dom";
+import { useNotifications } from "../contexts/NotificationContext";
 import Reply from "./Reply";
 import "./Comment.css";
 
@@ -21,6 +22,7 @@ const Comment: React.FC<CommentProps> = ({ comment, user }) => {
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [loadingReplies, setLoadingReplies] = useState(false);
   const navigate = useNavigate();
+  const { refreshNotifications } = useNotifications();
 
   useEffect(() => {
     const fetchAuthor = async () => {
@@ -81,6 +83,9 @@ const Comment: React.FC<CommentProps> = ({ comment, user }) => {
       setReplies(updatedReplies);
       setReplyContent("");
       setShowReplyForm(false);
+      
+      // Trigger notification refresh for the comment author
+      refreshNotifications();
     } catch (error) {
       console.error("Failed to submit reply:", error);
     } finally {

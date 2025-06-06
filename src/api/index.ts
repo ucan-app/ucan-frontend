@@ -6,7 +6,21 @@ const API_BASE_URL = "http://127.0.0.1:8080";
 export const api = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true, // for cookie auths
-}); 
+});
+
+// Utility function to check if error is authentication-related and handle session expiration
+export const handleAuthenticationError = (error: any): boolean => {
+  if (error.response?.status === 401 || error.response?.status === 403) {
+    // Clear localStorage and redirect to login
+    localStorage.removeItem("currentUser");
+    // Small delay before redirect to allow cleanup
+    setTimeout(() => {
+      window.location.href = "/login";
+    }, 100);
+    return true;
+  }
+  return false;
+};
 
 // Helper function to handle API errors consistently
 export const handleApiError = (error: any, defaultMessage: string): never => {

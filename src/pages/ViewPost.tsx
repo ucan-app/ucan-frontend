@@ -4,6 +4,7 @@ import PostFull from "../components/PostFull";
 import { Post, PostComment, User } from "../types";
 import { getPost } from "../api";
 import { getComments, createComment } from "../api/comment";
+import { useNotifications } from "../contexts/NotificationContext";
 
 interface ViewPostProps {
   user: User | null;
@@ -16,6 +17,7 @@ const ViewPost: React.FC<ViewPostProps> = ({ user }) => {
   const [comments, setComments] = useState<PostComment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { refreshNotifications } = useNotifications();
 
   useEffect(() => {
     const fetchPostData = async () => {
@@ -59,6 +61,9 @@ const ViewPost: React.FC<ViewPostProps> = ({ user }) => {
       // Refresh comments after adding
       const updatedComments = await getComments(post.id);
       setComments(updatedComments);
+      
+      // Trigger notification refresh for the post author
+      refreshNotifications();
     } catch (err: any) {
       alert("Failed to add comment: " + (err.message || "Unknown error"));
     }

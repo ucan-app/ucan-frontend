@@ -117,4 +117,6 @@ export type Notification = {
   message: string;
   read: boolean;
   createdAt: string;
+  postId?: number;
+  commentId?: number;
 };

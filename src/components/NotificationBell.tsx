@@ -131,6 +131,9 @@ const NotificationBell: React.FC<{ userId: number }> = ({ userId }) => {
 
             {isOpen && (
                 <div className="notification-dropdown">
+                    <div className="notification-header">
+                        <h4>Notifications</h4>
+                    </div>
                     {notifications.length === 0 ? (
                         <div className="no-notifications">
                             <div className="no-notifications-icon">🔔</div>

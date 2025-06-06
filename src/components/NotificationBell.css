@@ -241,6 +241,7 @@
     flex-direction: column;
     gap: 4px;
     min-width: 0;
+    padding-right: 16px;
 }
 
 .notification-message {

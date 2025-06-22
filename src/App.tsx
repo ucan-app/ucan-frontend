@@ -15,6 +15,7 @@ import ViewPost from "./pages/ViewPost";
 import EditProfile from "./pages/EditProfile";
 import CreatePost from "./pages/CreatePost";
 import { User } from "./types";
+import { NotificationProvider } from "./contexts/NotificationContext";
 
 function App(): JSX.Element {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -89,26 +90,28 @@ function App(): JSX.Element {
   };
 
   return (
-    <Router>
-      <Layout
-        isLoggedIn={isLoggedIn}
-        handleLogout={handleLogout}
-        currentUser={currentUser}
-      >
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/post/:pid" element={<ViewPost user={currentUser}/>} />
-          <Route path="/create" element={<CreatePost user={currentUser} />} />
-          <Route path="/profile" element={<ViewProfile user={currentUser} />} />
-          <Route path="/profile/:userId" element={<ViewProfile user={currentUser} />} />
-          <Route path="/edit" element={<EditProfile user={currentUser} onSave={handleProfileUpdate} />} />
-          {/* Redirect to home if no match */}
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </Layout>
-    </Router>
+      <Router>
+        <NotificationProvider>
+          <Layout
+            isLoggedIn={isLoggedIn}
+            handleLogout={handleLogout}
+            currentUser={currentUser}
+          >
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/login" element={<Login onLogin={handleLogin} />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/post/:pid" element={<ViewPost user={currentUser}/>} />
+              <Route path="/create" element={<CreatePost user={currentUser} />} />
+              <Route path="/profile" element={<ViewProfile user={currentUser} />} />
+              <Route path="/profile/:userId" element={<ViewProfile user={currentUser} />} />
+              <Route path="/edit" element={<EditProfile user={currentUser} onSave={handleProfileUpdate} />} />
+              {/* Redirect to home if no match */}
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+          </Layout>
+        </NotificationProvider>
+      </Router>
   );
 }
 

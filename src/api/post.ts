@@ -32,13 +32,21 @@ export const createPost = async (postData: {
   title: string; 
   description: string; 
   creatorId: number;
-  image?: File; // Add this optional parameter
+  image?: File;
+  tagIds?: number[];
 }): Promise<Post> => {
   try {
     const formData = new FormData();
     formData.append('title', postData.title);
     formData.append('description', postData.description);
     formData.append('creatorId', postData.creatorId.toString());
+    
+    // Add tags if provided
+    if (postData.tagIds && postData.tagIds.length > 0) {
+      postData.tagIds.forEach(tagId => {
+        formData.append('tagIds', tagId.toString());
+      });
+    }
     
     // Add image if provided
     if (postData.image) {
@@ -109,11 +117,17 @@ export const deletePost = async (postId: number): Promise<void> => {
   }
 };
 
-export const updatePost = async (postId: number, title: string, description: string): Promise<Post> => {
+export const updatePost = async (postId: number, title: string, description: string, tagIds?: number[]): Promise<Post> => {
   try {
     const params = new URLSearchParams();
     params.append('title', title);
     params.append('description', description);
+    
+    if (tagIds && tagIds.length > 0) {
+      tagIds.forEach(tagId => {
+        params.append('tagIds', tagId.toString());
+      });
+    }
     
     const response = await api.put(
       `/api/posts/${postId}`,
@@ -129,6 +143,31 @@ export const updatePost = async (postId: number, title: string, description: str
     return response.data;
   } catch (error: any) {
     handleApiError(error, "Failed to update post");
+    throw error;
+  }
+};
+
+export const getPostsByTag = async (tag: string): Promise<Post[]> => {
+  try {
+    const response = await api.get(`/api/posts/tag/${tag}`);
+    return response.data;
+  } catch (error: any) {
+    handleApiError(error, "Failed to fetch posts by tag");
+    throw error;
+  }
+};
+
+export const getPostsByTagIds = async (tagIds: number[]): Promise<Post[]> => {
+  try {
+    const params = new URLSearchParams();
+    tagIds.forEach(tagId => {
+      params.append('tagIds', tagId.toString());
+    });
+
+    const response = await api.get(`/api/posts/tags?${params}`);
+    return response.data;
+  } catch (error: any) {
+    handleApiError(error, "Failed to fetch posts by tag IDs");
     throw error;
   }
 };

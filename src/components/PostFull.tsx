@@ -5,6 +5,7 @@ import { getProfile } from "../api";
 import { upvotePost, downvotePost, getPost, deletePost, updatePost } from "../api/post";
 import { useNavigate } from "react-router-dom";
 import ProfilePictureDisplay from "../components/ProfilePictureDisplay";
+import TagDisplay from "./TagDisplay";
 import "./PostFull.css";
 
 interface PostFullProps {
@@ -287,6 +288,13 @@ const PostFull: React.FC<PostFullProps> = ({
                     e.currentTarget.style.display = 'none';
                   }}
                 />
+              </div>
+            )}
+            
+            {/* Post Tags */}
+            {post.tags && post.tags.length > 0 && (
+              <div className="post-tags-section">
+                <TagDisplay tags={post.tags} />
               </div>
             )}
           </>

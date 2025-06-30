@@ -3,6 +3,7 @@ import { Post, User } from "../types";
 import { useNavigate } from "react-router-dom";
 import { getProfile } from "../api";
 import ProfilePictureDisplay from "../components/ProfilePictureDisplay";
+import TagDisplay from "./TagDisplay";
 import "./PostPreview.css";
 
 interface PostPreviewProps {
@@ -86,6 +87,12 @@ const PostPreview: React.FC<PostPreviewProps> = ({ post }) => {
             ? `${post.description.slice(0, 100)}...`
             : post.description}
         </div>
+        {post.tags && post.tags.length > 0 && (
+          <TagDisplay 
+            tags={post.tags} 
+            maxDisplay={3}
+          />
+        )}
         <div className="post-footer">
           {post.createdAt && (
             <div className="post-date">

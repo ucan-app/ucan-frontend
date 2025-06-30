@@ -35,6 +35,7 @@ export type Post = {
   createdAt: Date;
   updatedAt: Date;
   imageUrl?: string;
+  tags?: Tag[];
 };
 
 // This interface matches Spring Data's Page interface
@@ -86,8 +87,11 @@ export type UserReply = {
 }
 
 export type Tag = {
-  tid: number;
+  id: number;
   name: string;
+  category: 'CLASSES' | 'CAREERS' | 'COMPANIES';
+  description?: string;
+  isActive: boolean;
 };
 
 export type Vote = {

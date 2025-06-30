@@ -1,0 +1,255 @@
+/* Original tag display for backwards compatibility */
+.tag-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.tag-chip {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #d2d2d7;
+  background: #fafafa;
+  color: #1d1d1f;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tag-chip:hover {
+  background: #f5f5f7;
+  border-color: #86868b;
+}
+
+.tag-chip.clickable {
+  cursor: pointer;
+}
+
+.tag-chip:active {
+  transform: scale(0.96);
+}
+
+.tag-chip:focus {
+  outline: 2px solid #007aff;
+  outline-offset: 2px;
+}
+
+.tag-chip.more-tags {
+  background-color: #f5f5f7;
+  color: #86868b;
+  border: 1px solid #d2d2d7;
+}
+
+/* Clean Apple-style tag interface */
+.clean-tag-interface {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 5px solid #ff0000;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  color: #1d1d1f;
+  line-height: 1.5;
+  padding: 40px;
+  font-size: 17px;
+}
+
+/* Add background to body/container */
+body, .clean-tag-interface-container {
+  background-color: #fafafa;
+}
+
+.tag-header {
+  padding-bottom: 32px;
+  border-bottom: 2px solid #d1d5db;
+}
+
+.tag-title-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.tag-title {
+  font-size: 48px;
+  font-weight: 600;
+  color: #1d1d1f;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.tag-action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.tag-action-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 2px solid #9ca3af;
+  font-size: 15px;
+  background: #f3f4f6;
+  color: #1d1d1f;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tag-action-btn:hover {
+  background: #e5e7eb;
+  border-color: #6b7280;
+}
+
+.tag-action-btn:active {
+  transform: scale(0.96);
+}
+
+.tag-action-btn:focus {
+  outline: 2px solid #007aff;
+  outline-offset: 2px;
+}
+
+.tag-delete-btn {
+  color: #ff3b30;
+}
+
+.tag-author-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.tag-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #007aff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.tag-author-name {
+  font-size: 17px;
+  font-weight: 500;
+  color: #1d1d1f;
+}
+
+.tag-description {
+  color: #6b7280;
+  font-size: 17px;
+  margin-bottom: 24px;
+  margin-top: 0;
+}
+
+.clean-tags-container {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.clean-tag {
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 3px solid #00ff00;
+  background: #ffff00;
+  color: #1d1d1f;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.clean-tag:hover {
+  background: #e5e7eb;
+  border-color: #6b7280;
+}
+
+.clean-tag:active {
+  transform: scale(0.96);
+}
+
+.clean-tag:focus {
+  outline: 2px solid #007aff;
+  outline-offset: 2px;
+}
+
+
+.tag-comments-section {
+  padding-top: 32px;
+  border-top: 2px solid #d1d5db;
+}
+
+.tag-comments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.tag-comments-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin: 0;
+}
+
+.tag-comments-count {
+  background: #f3f4f6;
+  color: #4b5563;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 2px solid #9ca3af;
+}
+
+.tag-add-comment-btn {
+  background: #007aff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-bottom: 24px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tag-add-comment-btn:hover {
+  background: #0056cc;
+}
+
+.tag-add-comment-btn:active {
+  transform: scale(0.98);
+}
+
+.tag-add-comment-btn:focus {
+  outline: 2px solid #007aff;
+  outline-offset: 2px;
+}
+
+.tag-no-comments {
+  text-align: center;
+  color: #4b5563;
+  font-size: 17px;
+  padding: 48px 24px;
+  border: 2px solid #9ca3af;
+  border-radius: 12px;
+  background: #f3f4f6;
+}

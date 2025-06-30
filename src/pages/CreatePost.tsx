@@ -3,6 +3,7 @@ import { User } from "../types";
 import { createPost } from "../api";
 import { validateImageFile } from "../api/image";
 import ImageUpload from "../components/ImageUpload";
+import TagSelector from "../components/TagSelector";
 import "./CreatePost.css";
 
 type CreatePostProps = {
@@ -16,6 +17,7 @@ const CreatePost: React.FC<CreatePostProps> = ({ user }) => {
   const [success, setSuccess] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [selectedTags, setSelectedTags] = useState<number[]>([]);
 
   const handlePost = async () => {
     if (!user) {
@@ -45,11 +47,13 @@ const CreatePost: React.FC<CreatePostProps> = ({ user }) => {
         description,
         creatorId: user.userId,
         image: selectedImage || undefined,
+        tagIds: selectedTags,
       });
       setSuccess("Post created successfully!");
       setTitle("");
       setDescription("");
       setSelectedImage(null);
+      setSelectedTags([]);
     } catch (err: any) {
       setError(err.message || "Failed to create post.");
     } finally {
@@ -114,6 +118,15 @@ const CreatePost: React.FC<CreatePostProps> = ({ user }) => {
           className="post-image-upload"
           label="Add Image to Post"
           showPreview={true}
+        />
+      </div>
+
+      <div className="form-group">
+        <label>Tags (Optional)</label>
+        <TagSelector
+          selectedTags={selectedTags}
+          onTagsChange={setSelectedTags}
+          maxTags={5}
         />
       </div>
 
